@@ -10,10 +10,12 @@ import {
   DropdownMenuPortal,
 } from 'radix-vue'
 import { Check, ChevronDown } from 'lucide-vue-next'
+import { useI18n } from '@/i18n'
 import { usePaletteStore } from '@/stores/paletteStore'
 import { useCanvasStore } from '@/stores/canvasStore'
 import { useImageIO } from '@/composables/useImageIO'
 
+const { t } = useI18n()
 const paletteStore = usePaletteStore()
 const canvasStore = useCanvasStore()
 const { savePalette, loadPalette } = useImageIO()
@@ -42,7 +44,7 @@ function extractFromImage() {
     <DropdownMenuTrigger
       class="flex items-center gap-1 px-3 py-1 text-sm text-foreground-secondary hover:bg-hover-emphasis rounded cursor-pointer"
     >
-      Farbpalette
+      {{ t('menu.palette') }}
       <ChevronDown class="w-3.5 h-3.5" />
     </DropdownMenuTrigger>
     <DropdownMenuPortal>
@@ -54,26 +56,26 @@ function extractFromImage() {
           class="pl-8 pr-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="onLoadClick"
         >
-          Palette laden
+          {{ t('menu.palette.load') }}
         </DropdownMenuItem>
         <DropdownMenuItem
           class="pl-8 pr-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="savePalette"
         >
-          Palette speichern
+          {{ t('menu.palette.save') }}
         </DropdownMenuItem>
         <DropdownMenuSeparator class="h-px bg-surface-active my-1" />
         <DropdownMenuItem
           class="pl-8 pr-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="paletteStore.clearPalette()"
         >
-          Palette leeren
+          {{ t('menu.palette.clear') }}
         </DropdownMenuItem>
         <DropdownMenuItem
           class="pl-8 pr-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="extractFromImage"
         >
-          Aus Bild extrahieren
+          {{ t('menu.palette.extractFromImage') }}
         </DropdownMenuItem>
         <DropdownMenuSeparator class="h-px bg-surface-active my-1" />
         <DropdownMenuCheckboxItem
@@ -84,7 +86,7 @@ function extractFromImage() {
           <span class="w-3 h-3 flex items-center justify-center border border-foreground-muted rounded-sm">
             <Check v-if="paletteStore.autoAdd" class="w-2.5 h-2.5" />
           </span>
-          Farben auto-hinzufügen
+          {{ t('menu.palette.autoAdd') }}
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenuPortal>

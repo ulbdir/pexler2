@@ -8,9 +8,11 @@ import {
   DropdownMenuPortal,
 } from 'radix-vue'
 import { ChevronDown } from 'lucide-vue-next'
+import { useI18n } from '@/i18n'
 import { useImageIO } from '@/composables/useImageIO'
 import NewCanvasDialog from '@/components/dialogs/NewCanvasDialog.vue'
 
+const { t } = useI18n()
 const { exportPNG, loadImage } = useImageIO()
 const fileInputRef = ref<HTMLInputElement | null>(null)
 const showNewDialog = ref(false)
@@ -33,7 +35,7 @@ async function onFileSelected(e: Event) {
     <DropdownMenuTrigger
       class="flex items-center gap-1 px-3 py-1 text-sm text-foreground-secondary hover:bg-hover-emphasis rounded cursor-pointer"
     >
-      Bild
+      {{ t('menu.image') }}
       <ChevronDown class="w-3.5 h-3.5" />
     </DropdownMenuTrigger>
     <DropdownMenuPortal>
@@ -45,19 +47,19 @@ async function onFileSelected(e: Event) {
           class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="showNewDialog = true"
         >
-          Neu...
+          {{ t('menu.image.new') }}
         </DropdownMenuItem>
         <DropdownMenuItem
           class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="onLoadClick"
         >
-          Bild laden
+          {{ t('menu.image.load') }}
         </DropdownMenuItem>
         <DropdownMenuItem
           class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="exportPNG"
         >
-          Speichern (PNG)
+          {{ t('menu.image.save') }}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenuPortal>

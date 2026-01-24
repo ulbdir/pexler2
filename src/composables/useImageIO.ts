@@ -2,9 +2,11 @@ import { useCanvasStore } from '@/stores/canvasStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { usePaletteStore } from '@/stores/paletteStore'
+import { useI18n } from '@/i18n'
 import type { RGBA } from '@/types'
 
 export function useImageIO() {
+  const { t } = useI18n()
   const canvasStore = useCanvasStore()
   const settingsStore = useSettingsStore()
   const historyStore = useHistoryStore()
@@ -40,7 +42,7 @@ export function useImageIO() {
 
       img.onerror = () => {
         URL.revokeObjectURL(objectUrl)
-        reject(new Error('Failed to load image'))
+        reject(new Error(t('error.loadImage')))
       }
 
       img.onload = () => {
@@ -80,7 +82,7 @@ export function useImageIO() {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
 
-      reader.onerror = () => reject(new Error('Failed to read palette file'))
+      reader.onerror = () => reject(new Error(t('error.readPalette')))
 
       reader.onload = () => {
         try {
@@ -88,7 +90,7 @@ export function useImageIO() {
           paletteStore.colors = data
           resolve()
         } catch {
-          reject(new Error('Invalid palette JSON'))
+          reject(new Error(t('error.invalidPalette')))
         }
       }
 

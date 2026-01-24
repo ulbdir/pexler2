@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { usePaletteStore } from '@/stores/paletteStore'
+import { useI18n } from '@/i18n'
 import SelectedColor from './SelectedColor.vue'
 import ColorSwatch from './ColorSwatch.vue'
 
+const { t } = useI18n()
 const paletteStore = usePaletteStore()
 </script>
 
 <template>
   <div>
-    <h2 class="text-xs font-semibold text-foreground-secondary mb-2">Farbpalette</h2>
+    <h2 class="text-xs font-semibold text-foreground-secondary mb-2">{{ t('palette.title') }}</h2>
     <SelectedColor />
     <div class="grid grid-cols-6 gap-0.5">
       <ColorSwatch
