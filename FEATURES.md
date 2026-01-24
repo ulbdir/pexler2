@@ -7,6 +7,7 @@
 - **Eraser** (`E`) — Clear pixels to transparent
 - **Flood Fill** (`G`) — Stack-based 4-directional fill
 - **Eyedropper** (`I`) — Pick color from canvas
+- **Shape tool** (`S`) — Line, Rectangle, Ellipse with outline/filled toggle and square/circle constraints
 
 ### Canvas & View
 - Configurable canvas size (1–512px, presets: 16x16, 32x32, 64x64, 128x128)
@@ -37,6 +38,12 @@
 - i18n support (English + German, auto-detected)
 - Grid toggle, checker background settings
 
+### Keyboard Shortcuts
+- `S` — Select Shape tool
+- `F` — Toggle outline/filled (when shape tool active)
+- `Q` — Toggle square/circle constraint (when rectangle/ellipse shape active)
+- `1`/`2`/`3` — Select Line/Rectangle/Ellipse (when shape tool active)
+
 ---
 
 ## Upcoming
@@ -47,7 +54,7 @@ Features prioritized by usefulness, development effort, and integration fit (sco
 
 | Feature | U | D | I | Total | Description |
 |---------|---|---|---|-------|-------------|
-| Line & Shape Tools | 5 | 4 | 5 | 14 | Line, rectangle, ellipse with live preview. Leverages existing Bresenham infrastructure. |
+| Line & Shape Tools | 5 | 4 | 5 | 14 | ✅ **COMPLETED**: Line, rectangle, ellipse with outline/filled toggle and square/circle constraints. Two-click interaction with live preview. |
 | Mirror / Symmetry Drawing | 5 | 4 | 5 | 14 | Horizontal/vertical axis symmetry while drawing. Duplicate setPixel with reflected coords. |
 | Flip & Rotate Canvas | 4 | 5 | 5 | 14 | Flip H/V, rotate 90/180/270. Pure pixel-data manipulation, ~20 lines each. |
 | Brush Size | 4 | 4 | 5 | 13 | Variable 1–16px brush with square/circle shapes. |

@@ -6,7 +6,7 @@ A browser-based pixel art editor. Draw, fill, pick colors, and export your creat
 
 ## Features
 
-- **Drawing Tools** — Pencil, Eraser, Flood Fill, Eyedropper
+- **Drawing Tools** — Pencil, Eraser, Flood Fill, Eyedropper, Shape tool
 - **Canvas** — Zoom (1x–64x), pan, resizable (1–512px), pixel grid overlay
 - **Colors** — 36-color default palette, full RGBA color picker, save/load palettes as JSON
 - **History** — Undo/Redo (up to 50 states)
@@ -21,6 +21,12 @@ A browser-based pixel art editor. Draw, fill, pick colors, and export your creat
 | Eraser | `E` |
 | Fill | `G` |
 | Eyedropper | `I` |
+| Shape tool | `S` |
+| Line tool | `1` (when shape tool active) |
+| Rectangle tool | `2` (when shape tool active) |
+| Ellipse tool | `3` (when shape tool active) |
+| Toggle filled | `F` (when shape tool active) |
+| Toggle square/circle | `Q` (when rectangle/ellipse shape active) |
 | Zoom In | `+` / scroll up |
 | Zoom Out | `-` / scroll down |
 | Pan | Right-click drag / Ctrl+drag |
