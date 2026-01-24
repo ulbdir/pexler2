@@ -1,0 +1,125 @@
+import { watch, type Ref, type WatchStopHandle } from 'vue'
+import { useCanvasStore } from '@/stores/canvasStore'
+import { useSettingsStore } from '@/stores/settingsStore'
+
+export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
+  const canvasStore = useCanvasStore()
+  const settings = useSettingsStore()
+
+  let offscreen: OffscreenCanvas | null = null
+  let rafId = 0
+  let needsRender = true
+
+  function scheduleRender() {
+    needsRender = true
+    if (!rafId) {
+      rafId = requestAnimationFrame(render)
+    }
+  }
+
+  function render() {
+    rafId = 0
+    if (!needsRender) return
+    needsRender = false
+
+    const canvas = canvasRef.value
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const dpr = window.devicePixelRatio || 1
+    const displayWidth = canvas.clientWidth
+    const displayHeight = canvas.clientHeight
+
+    if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
+      canvas.width = displayWidth * dpr
+      canvas.height = displayHeight * dpr
+    }
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    ctx.clearRect(0, 0, displayWidth, displayHeight)
+
+    const zoom = settings.zoom
+    const panX = settings.panX
+    const panY = settings.panY
+    const imgW = canvasStore.width
+    const imgH = canvasStore.height
+
+    // Draw checkerboard background (sized in image pixels, scales with zoom)
+    if (settings.backgroundEnabled) {
+      const checker = settings.checkerSize
+      const screenChecker = checker * zoom
+      const cols = Math.ceil(imgW / checker)
+      const rows = Math.ceil(imgH / checker)
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const isLight = ((col + row) % 2) === 0
+          ctx.fillStyle = isLight ? '#ffffff' : '#e0e0e0'
+          const sx = panX + col * screenChecker
+          const sy = panY + row * screenChecker
+          const sw = Math.min(screenChecker, panX + imgW * zoom - sx)
+          const sh = Math.min(screenChecker, panY + imgH * zoom - sy)
+          ctx.fillRect(sx, sy, sw, sh)
+        }
+      }
+    }
+
+    // Render image pixels via offscreen canvas
+    if (!offscreen || offscreen.width !== imgW || offscreen.height !== imgH) {
+      offscreen = new OffscreenCanvas(imgW, imgH)
+    }
+    const offCtx = offscreen.getContext('2d')!
+    const imageData = new ImageData(new Uint8ClampedArray(canvasStore.pixels), imgW, imgH)
+    offCtx.putImageData(imageData, 0, 0)
+
+    ctx.imageSmoothingEnabled = false
+    ctx.drawImage(offscreen, panX, panY, imgW * zoom, imgH * zoom)
+
+    // Draw grid overlay
+    if (settings.gridVisible && zoom >= 4) {
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)'
+      ctx.lineWidth = 0.5
+      ctx.beginPath()
+      for (let x = 0; x <= imgW; x++) {
+        const px = panX + x * zoom
+        ctx.moveTo(px, panY)
+        ctx.lineTo(px, panY + imgH * zoom)
+      }
+      for (let y = 0; y <= imgH; y++) {
+        const py = panY + y * zoom
+        ctx.moveTo(panX, py)
+        ctx.lineTo(panX + imgW * zoom, py)
+      }
+      ctx.stroke()
+    }
+  }
+
+  const stopWatch: WatchStopHandle = watch(
+    () => [
+      canvasStore.version,
+      settings.zoom,
+      settings.panX,
+      settings.panY,
+      settings.gridVisible,
+      settings.backgroundEnabled,
+      settings.checkerSize,
+    ],
+    scheduleRender,
+  )
+
+  function handleResize() {
+    scheduleRender()
+  }
+
+  function stop() {
+    stopWatch()
+    if (rafId) {
+      cancelAnimationFrame(rafId)
+      rafId = 0
+    }
+  }
+
+  return { scheduleRender, handleResize, stop }
+}
