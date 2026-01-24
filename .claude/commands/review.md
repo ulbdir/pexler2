@@ -10,7 +10,7 @@ Evaluate:
 
 1. **Correctness**: Logic errors, edge cases, off-by-one errors
 2. **TypeScript**: Proper typing, no unsafe casts, no `any`
-3. **Vue patterns**: Correct use of reactivity, composables, lifecycle hooks
+3. **Vue patterns**: Correct use of reactivity, composables, lifecycle hooks. Watch for circular reactivity between Vue watchers and external library event handlers (e.g., a watcher calls `lib.setValue()` which fires a `change` event that updates the store, triggering the watcher again). These need guard flags to break the loop.
 4. **Performance**: Unnecessary re-renders, memory leaks, inefficient algorithms
 5. **Security**: XSS, injection, unsafe user input handling
 6. **Code clarity**: Naming, structure, single responsibility

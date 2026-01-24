@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuPortal,
 } from 'radix-vue'
+import { ChevronDown } from 'lucide-vue-next'
 import { useImageIO } from '@/composables/useImageIO'
 import NewCanvasDialog from '@/components/dialogs/NewCanvasDialog.vue'
 
@@ -30,9 +31,10 @@ async function onFileSelected(e: Event) {
 <template>
   <DropdownMenuRoot>
     <DropdownMenuTrigger
-      class="px-3 py-1 text-sm text-foreground-secondary hover:bg-hover-emphasis rounded cursor-pointer"
+      class="flex items-center gap-1 px-3 py-1 text-sm text-foreground-secondary hover:bg-hover-emphasis rounded cursor-pointer"
     >
       Bild
+      <ChevronDown class="w-3.5 h-3.5" />
     </DropdownMenuTrigger>
     <DropdownMenuPortal>
       <DropdownMenuContent

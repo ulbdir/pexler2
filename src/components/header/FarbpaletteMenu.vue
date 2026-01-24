@@ -7,10 +7,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuCheckboxItem,
-  DropdownMenuItemIndicator,
   DropdownMenuPortal,
 } from 'radix-vue'
-import { Check } from 'lucide-vue-next'
+import { Check, ChevronDown } from 'lucide-vue-next'
 import { usePaletteStore } from '@/stores/paletteStore'
 import { useCanvasStore } from '@/stores/canvasStore'
 import { useImageIO } from '@/composables/useImageIO'
@@ -41,9 +40,10 @@ function extractFromImage() {
 <template>
   <DropdownMenuRoot>
     <DropdownMenuTrigger
-      class="px-3 py-1 text-sm text-foreground-secondary hover:bg-hover-emphasis rounded cursor-pointer"
+      class="flex items-center gap-1 px-3 py-1 text-sm text-foreground-secondary hover:bg-hover-emphasis rounded cursor-pointer"
     >
       Farbpalette
+      <ChevronDown class="w-3.5 h-3.5" />
     </DropdownMenuTrigger>
     <DropdownMenuPortal>
       <DropdownMenuContent
@@ -51,26 +51,26 @@ function extractFromImage() {
         :side-offset="4"
       >
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="pl-8 pr-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="onLoadClick"
         >
           Palette laden
         </DropdownMenuItem>
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="pl-8 pr-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="savePalette"
         >
           Palette speichern
         </DropdownMenuItem>
         <DropdownMenuSeparator class="h-px bg-surface-active my-1" />
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="pl-8 pr-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="paletteStore.clearPalette()"
         >
           Palette leeren
         </DropdownMenuItem>
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="pl-8 pr-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="extractFromImage"
         >
           Aus Bild extrahieren
@@ -81,9 +81,9 @@ function extractFromImage() {
           :checked="paletteStore.autoAdd"
           @update:checked="paletteStore.autoAdd = $event"
         >
-          <DropdownMenuItemIndicator>
-            <Check class="w-3 h-3" />
-          </DropdownMenuItemIndicator>
+          <span class="w-3 h-3 flex items-center justify-center border border-foreground-muted rounded-sm">
+            <Check v-if="paletteStore.autoAdd" class="w-2.5 h-2.5" />
+          </span>
           Farben auto-hinzufügen
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>

@@ -8,6 +8,8 @@ import '@simonwep/pickr/dist/themes/monolith.min.css'
 const paletteStore = usePaletteStore()
 const pickrContainer = ref<HTMLElement | null>(null)
 let pickrInstance: Pickr | null = null
+let updatingFromStore = false
+let updatingFromPickr = false
 
 const hexColor = computed(() => rgbaToHex(paletteStore.selectedColor))
 
@@ -32,7 +34,9 @@ onMounted(() => {
   })
 
   pickrInstance.on('change', (color: Pickr.HSVaColor) => {
+    if (updatingFromStore) return
     const [r = 0, g = 0, b = 0, a = 1] = color.toRGBA()
+    updatingFromPickr = true
     paletteStore.selectedColor = {
       r: Math.round(r),
       g: Math.round(g),
@@ -40,12 +44,19 @@ onMounted(() => {
       a: Math.round(a * 255),
     }
     pickrInstance!.applyColor()
+    updatingFromPickr = false
   })
 })
 
 watch(() => paletteStore.selectedColor, (newColor) => {
-  if (!pickrInstance) return
-  pickrInstance.setColor(rgbaToCss(newColor), true)
+  if (!pickrInstance || updatingFromPickr) return
+  updatingFromStore = true
+  try {
+    pickrInstance.setColor(rgbaToCss(newColor), true)
+    pickrInstance.applyColor()
+  } finally {
+    updatingFromStore = false
+  }
 }, { deep: true })
 
 onBeforeUnmount(() => {
