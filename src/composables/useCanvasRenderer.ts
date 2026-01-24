@@ -1,10 +1,16 @@
 import { watch, type Ref, type WatchStopHandle } from 'vue'
 import { useCanvasStore } from '@/stores/canvasStore'
 import { useSettingsStore } from '@/stores/settingsStore'
+import { useToolStore } from '@/stores/toolStore'
+import { usePaletteStore } from '@/stores/paletteStore'
+import { bresenhamLine } from '@/utils/bresenham'
+import { rectOutline, rectFilled, ellipseOutline, ellipseFilled } from '@/utils/shapes'
 
 export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
   const canvasStore = useCanvasStore()
   const settings = useSettingsStore()
+  const toolStore = useToolStore()
+  const paletteStore = usePaletteStore()
 
   let offscreen: OffscreenCanvas | null = null
   let rafId = 0
@@ -77,6 +83,53 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
     ctx.imageSmoothingEnabled = false
     ctx.drawImage(offscreen, panX, panY, imgW * zoom, imgH * zoom)
 
+    // Draw shape preview overlay
+    if (toolStore.pendingShape) {
+      const pending = toolStore.pendingShape
+      const color = paletteStore.selectedColor
+      const cssColor = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a / 255})`
+
+      let end = pending.end
+      if (toolStore.shapeConstrain && toolStore.shapeType !== 'line') {
+        const dx = end.x - pending.start.x
+        const dy = end.y - pending.start.y
+        const size = Math.max(Math.abs(dx), Math.abs(dy))
+        end = {
+          x: pending.start.x + size * Math.sign(dx || 1),
+          y: pending.start.y + size * Math.sign(dy || 1),
+        }
+      }
+
+      const shapePixels: { x: number; y: number }[] = []
+      const collect = (x: number, y: number) => shapePixels.push({ x, y })
+
+      switch (toolStore.shapeType) {
+        case 'line':
+          bresenhamLine(pending.start, end, collect)
+          break
+        case 'rect':
+          if (toolStore.shapeFilled) {
+            rectFilled(pending.start, end, collect)
+          } else {
+            rectOutline(pending.start, end, collect)
+          }
+          break
+        case 'ellipse':
+          if (toolStore.shapeFilled) {
+            ellipseFilled(pending.start, end, collect)
+          } else {
+            ellipseOutline(pending.start, end, collect)
+          }
+          break
+      }
+
+      ctx.fillStyle = cssColor
+      for (const p of shapePixels) {
+        if (p.x < 0 || p.x >= imgW || p.y < 0 || p.y >= imgH) continue
+        ctx.fillRect(panX + p.x * zoom, panY + p.y * zoom, zoom, zoom)
+      }
+    }
+
     // Draw grid overlay
     if (settings.gridVisible && zoom >= 4) {
       ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)'
@@ -105,6 +158,9 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
       settings.gridVisible,
       settings.backgroundEnabled,
       settings.checkerSize,
+      toolStore.pendingShape,
+      toolStore.shapeFilled,
+      toolStore.shapeConstrain,
     ],
     scheduleRender,
   )

@@ -43,6 +43,28 @@ export function useKeyboardShortcuts() {
       case 'i':
         toolStore.setTool('eyedropper')
         break
+      case 's':
+        toolStore.setTool('shape')
+        break
+      case '1':
+        if (toolStore.activeTool === 'shape') toolStore.setShapeType('line')
+        break
+      case '2':
+        if (toolStore.activeTool === 'shape') toolStore.setShapeType('rect')
+        break
+      case '3':
+        if (toolStore.activeTool === 'shape') toolStore.setShapeType('ellipse')
+        break
+      case 'f':
+        if (toolStore.activeTool === 'shape' && toolStore.shapeType !== 'line') {
+          toolStore.toggleShapeFilled()
+        }
+        break
+      case 'q':
+        if (toolStore.activeTool === 'shape' && toolStore.shapeType !== 'line') {
+          toolStore.toggleShapeConstrain()
+        }
+        break
       case '+':
       case '=':
         settings.zoom = Math.min(64, Math.round(settings.zoom * 1.5))

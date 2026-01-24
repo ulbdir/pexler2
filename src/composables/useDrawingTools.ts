@@ -6,6 +6,7 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { screenToImage } from '@/composables/useCanvasInteraction'
 import { floodFill } from '@/utils/floodFill'
 import { bresenhamLine } from '@/utils/bresenham'
+import { rectOutline, rectFilled, ellipseOutline, ellipseFilled } from '@/utils/shapes'
 import type { Point } from '@/types'
 
 export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
@@ -30,6 +31,57 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
         canvasStore.setPixel(x, y, { r: 0, g: 0, b: 0, a: 0 })
         break
       }
+    }
+  }
+
+  function constrainEnd(start: Point, end: Point): Point {
+    const dx = end.x - start.x
+    const dy = end.y - start.y
+    const size = Math.max(Math.abs(dx), Math.abs(dy))
+    return {
+      x: start.x + size * Math.sign(dx || 1),
+      y: start.y + size * Math.sign(dy || 1),
+    }
+  }
+
+  function resolveEnd(start: Point, end: Point): Point {
+    if (toolStore.shapeConstrain && toolStore.shapeType !== 'line') {
+      return constrainEnd(start, end)
+    }
+    return end
+  }
+
+  function commitShape(start: Point, end: Point) {
+    const color = paletteStore.selectedColor
+    const setPixel = (x: number, y: number) => {
+      canvasStore.setPixel(x, y, color)
+    }
+
+    const resolved = resolveEnd(start, end)
+
+    switch (toolStore.shapeType) {
+      case 'line':
+        bresenhamLine(start, resolved, setPixel)
+        break
+      case 'rect':
+        if (toolStore.shapeFilled) {
+          rectFilled(start, resolved, setPixel)
+        } else {
+          rectOutline(start, resolved, setPixel)
+        }
+        break
+      case 'ellipse':
+        if (toolStore.shapeFilled) {
+          ellipseFilled(start, resolved, setPixel)
+        } else {
+          ellipseOutline(start, resolved, setPixel)
+        }
+        break
+    }
+
+    canvasStore.bumpVersion()
+    if (paletteStore.autoAdd) {
+      paletteStore.addColor(color)
     }
   }
 
@@ -76,11 +128,29 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
   function onPointerDown(e: PointerEvent) {
     if (e.button !== 0 || e.ctrlKey) return
 
+    const tool = toolStore.activeTool
+
+    if (tool === 'shape') {
+      const pos = screenToImage(canvasRef.value, e.clientX, e.clientY)
+      if (!pos) return
+
+      if (!toolStore.pendingShape) {
+        // First click: set start point
+        toolStore.setPendingShape({ start: pos, end: pos })
+      } else {
+        // Second click: commit shape
+        historyStore.pushState()
+        commitShape(toolStore.pendingShape.start, pos)
+        toolStore.setPendingShape(null)
+      }
+      return
+    }
+
     isDrawing = true
     lastPos = null
     canvasRef.value?.setPointerCapture(e.pointerId)
 
-    if (toolStore.activeTool !== 'eyedropper') {
+    if (tool !== 'eyedropper') {
       historyStore.pushState()
     }
 
@@ -88,8 +158,19 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
   }
 
   function onPointerMove(e: PointerEvent) {
+    const tool = toolStore.activeTool
+
+    if (tool === 'shape' && toolStore.pendingShape) {
+      // Update preview endpoint
+      const pos = screenToImage(canvasRef.value, e.clientX, e.clientY)
+      if (pos) {
+        toolStore.setPendingShape({ start: toolStore.pendingShape.start, end: pos })
+      }
+      return
+    }
+
     if (!isDrawing) return
-    if (toolStore.activeTool === 'fill' || toolStore.activeTool === 'eyedropper') return
+    if (tool === 'fill' || tool === 'eyedropper') return
     applyTool(e.clientX, e.clientY)
   }
 
@@ -109,6 +190,21 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     }
   }
 
+  function onContextMenu(e: MouseEvent) {
+    // Right-click cancels pending shape
+    if (toolStore.activeTool === 'shape' && toolStore.pendingShape) {
+      e.preventDefault()
+      toolStore.setPendingShape(null)
+    }
+  }
+
+  function onKeyDown(e: KeyboardEvent) {
+    // Escape cancels pending shape
+    if (e.key === 'Escape' && toolStore.activeTool === 'shape' && toolStore.pendingShape) {
+      toolStore.setPendingShape(null)
+    }
+  }
+
   function attach() {
     const canvas = canvasRef.value
     if (!canvas) return
@@ -116,6 +212,8 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     canvas.addEventListener('pointermove', onPointerMove)
     canvas.addEventListener('pointerup', onPointerUp)
     canvas.addEventListener('pointercancel', onPointerCancel)
+    canvas.addEventListener('contextmenu', onContextMenu)
+    document.addEventListener('keydown', onKeyDown)
   }
 
   function detach() {
@@ -125,6 +223,8 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     canvas.removeEventListener('pointermove', onPointerMove)
     canvas.removeEventListener('pointerup', onPointerUp)
     canvas.removeEventListener('pointercancel', onPointerCancel)
+    canvas.removeEventListener('contextmenu', onContextMenu)
+    document.removeEventListener('keydown', onKeyDown)
   }
 
   return { attach, detach }

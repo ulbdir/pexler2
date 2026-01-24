@@ -1,4 +1,6 @@
-export type ToolType = 'pencil' | 'eraser' | 'fill' | 'eyedropper'
+export type ToolType = 'pencil' | 'eraser' | 'fill' | 'eyedropper' | 'shape'
+
+export type ShapeType = 'line' | 'rect' | 'ellipse'
 
 export interface RGBA {
   r: number
