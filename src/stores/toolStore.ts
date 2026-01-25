@@ -36,6 +36,14 @@ export const useToolStore = defineStore('tool', () => {
     pendingShape.value = shape
   }
 
+  function $reset() {
+    activeTool.value = 'pencil'
+    shapeType.value = 'line'
+    shapeFilled.value = false
+    shapeConstrain.value = false
+    pendingShape.value = null
+  }
+
   return {
     activeTool,
     shapeType,
@@ -47,5 +55,6 @@ export const useToolStore = defineStore('tool', () => {
     toggleShapeFilled,
     toggleShapeConstrain,
     setPendingShape,
+    $reset,
   }
 })

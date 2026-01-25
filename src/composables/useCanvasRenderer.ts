@@ -4,7 +4,7 @@ import { useSettingsStore } from '@/stores/settingsStore'
 import { useToolStore } from '@/stores/toolStore'
 import { usePaletteStore } from '@/stores/paletteStore'
 import { bresenhamLine } from '@/utils/bresenham'
-import { rectOutline, rectFilled, ellipseOutline, ellipseFilled } from '@/utils/shapes'
+import { rectOutline, rectFilled, ellipseOutline, ellipseFilled, constrainToSquare } from '@/utils/shapes'
 
 export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
   const canvasStore = useCanvasStore()
@@ -91,13 +91,7 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
 
       let end = pending.end
       if (toolStore.shapeConstrain && toolStore.shapeType !== 'line') {
-        const dx = end.x - pending.start.x
-        const dy = end.y - pending.start.y
-        const size = Math.max(Math.abs(dx), Math.abs(dy))
-        end = {
-          x: pending.start.x + size * Math.sign(dx || 1),
-          y: pending.start.y + size * Math.sign(dy || 1),
-        }
+        end = constrainToSquare(pending.start, end)
       }
 
       const shapePixels: { x: number; y: number }[] = []
@@ -159,8 +153,10 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
       settings.backgroundEnabled,
       settings.checkerSize,
       toolStore.pendingShape,
+      toolStore.shapeType,
       toolStore.shapeFilled,
       toolStore.shapeConstrain,
+      paletteStore.selectedColor,
     ],
     scheduleRender,
   )

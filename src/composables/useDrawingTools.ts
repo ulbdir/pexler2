@@ -6,7 +6,7 @@ import { useHistoryStore } from '@/stores/historyStore'
 import { screenToImage } from '@/composables/useCanvasInteraction'
 import { floodFill } from '@/utils/floodFill'
 import { bresenhamLine } from '@/utils/bresenham'
-import { rectOutline, rectFilled, ellipseOutline, ellipseFilled } from '@/utils/shapes'
+import { rectOutline, rectFilled, ellipseOutline, ellipseFilled, constrainToSquare } from '@/utils/shapes'
 import type { Point } from '@/types'
 
 export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
@@ -34,19 +34,9 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     }
   }
 
-  function constrainEnd(start: Point, end: Point): Point {
-    const dx = end.x - start.x
-    const dy = end.y - start.y
-    const size = Math.max(Math.abs(dx), Math.abs(dy))
-    return {
-      x: start.x + size * Math.sign(dx || 1),
-      y: start.y + size * Math.sign(dy || 1),
-    }
-  }
-
   function resolveEnd(start: Point, end: Point): Point {
     if (toolStore.shapeConstrain && toolStore.shapeType !== 'line') {
-      return constrainEnd(start, end)
+      return constrainToSquare(start, end)
     }
     return end
   }
@@ -201,6 +191,8 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
   function onKeyDown(e: KeyboardEvent) {
     // Escape cancels pending shape
     if (e.key === 'Escape' && toolStore.activeTool === 'shape' && toolStore.pendingShape) {
+      e.preventDefault()
+      e.stopPropagation()
       toolStore.setPendingShape(null)
     }
   }

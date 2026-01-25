@@ -1,5 +1,18 @@
 import type { Point } from '@/types'
 
+/**
+ * Constrains an endpoint to form a square/circle by using the larger dimension.
+ */
+export function constrainToSquare(start: Point, end: Point): Point {
+  const dx = end.x - start.x
+  const dy = end.y - start.y
+  const size = Math.max(Math.abs(dx), Math.abs(dy))
+  return {
+    x: start.x + size * Math.sign(dx || 1),
+    y: start.y + size * Math.sign(dy || 1),
+  }
+}
+
 export function rectOutline(
   a: Point,
   b: Point,
@@ -103,9 +116,11 @@ export function ellipseOutline(
 
   do {
     callback(cx1, cy0)
-    callback(cx0, cy0)
-    callback(cx0, cy1)
-    callback(cx1, cy1)
+    if (cx0 !== cx1) callback(cx0, cy0)
+    if (cy0 !== cy1) {
+      callback(cx0, cy1)
+      if (cx0 !== cx1) callback(cx1, cy1)
+    }
     const e2 = 2 * err
     if (e2 <= dy) {
       cy0++
