@@ -27,8 +27,10 @@ export interface Messages {
   'tools.shapeRect': string
   'tools.shapeEllipse': string
   'tools.shapeFilled': string
+  'tools.shapeFilledDesc': string
   'tools.shapeSquare': string
   'tools.shapeCircle': string
+  'tools.shapeConstrainDesc': string
   'palette.title': string
   'canvas.resetView': string
   'canvas.zoomIn': string
