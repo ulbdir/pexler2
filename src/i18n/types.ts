@@ -21,6 +21,14 @@ export interface Messages {
   'tools.eraser': string
   'tools.fill': string
   'tools.eyedropper': string
+  'tools.shape': string
+  'tools.shapeType': string
+  'tools.shapeLine': string
+  'tools.shapeRect': string
+  'tools.shapeEllipse': string
+  'tools.shapeFilled': string
+  'tools.shapeSquare': string
+  'tools.shapeCircle': string
   'palette.title': string
   'canvas.resetView': string
   'canvas.zoomIn': string
