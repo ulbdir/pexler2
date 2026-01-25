@@ -1,6 +1,8 @@
 import type { Messages } from './types'
 
 const de: Messages = {
+  'actions.undo': 'Rückgängig',
+  'actions.redo': 'Wiederholen',
   'menu.image': 'Bild',
   'menu.image.new': 'Neu...',
   'menu.image.load': 'Bild laden',

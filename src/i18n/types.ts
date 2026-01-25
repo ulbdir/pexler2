@@ -1,6 +1,8 @@
 export type Locale = 'en' | 'de'
 
 export interface Messages {
+  'actions.undo': string
+  'actions.redo': string
   'menu.image': string
   'menu.image.new': string
   'menu.image.load': string
