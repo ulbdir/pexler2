@@ -42,7 +42,7 @@ function setShapeType(type: ShapeType) {
     <div v-if="isShapeActive" class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
       <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.shapeType') }}</h3>
       <div class="grid grid-cols-3 gap-1">
-        <Tooltip :label="t('tools.shapeLine')">
+        <Tooltip :label="t('tools.shapeLine')" shortcut="1">
           <button
             class="w-full h-7 flex items-center justify-center border rounded transition-colors"
             :class="toolStore.shapeType === 'line'
@@ -53,7 +53,7 @@ function setShapeType(type: ShapeType) {
             <Minus class="w-3.5 h-3.5 text-foreground-secondary" />
           </button>
         </Tooltip>
-        <Tooltip :label="t('tools.shapeRect')">
+        <Tooltip :label="t('tools.shapeRect')" shortcut="2">
           <button
             class="w-full h-7 flex items-center justify-center border rounded transition-colors"
             :class="toolStore.shapeType === 'rect'
@@ -64,7 +64,7 @@ function setShapeType(type: ShapeType) {
             <Square class="w-3.5 h-3.5 text-foreground-secondary" />
           </button>
         </Tooltip>
-        <Tooltip :label="t('tools.shapeEllipse')">
+        <Tooltip :label="t('tools.shapeEllipse')" shortcut="3">
           <button
             class="w-full h-7 flex items-center justify-center border rounded transition-colors"
             :class="toolStore.shapeType === 'ellipse'
