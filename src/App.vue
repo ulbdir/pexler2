@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TooltipProvider } from 'radix-vue'
 import AppHeader from './components/layout/AppHeader.vue'
 import ToolSidebar from './components/layout/ToolSidebar.vue'
 import PaletteSidebar from './components/layout/PaletteSidebar.vue'
@@ -9,12 +10,14 @@ useKeyboardShortcuts()
 </script>
 
 <template>
-  <div class="grid grid-rows-[auto_1fr] w-full h-full">
-    <AppHeader />
-    <div class="grid grid-cols-[auto_1fr_auto] min-h-0 bg-surface gap-0">
-      <ToolSidebar />
-      <CanvasArea />
-      <PaletteSidebar />
+  <TooltipProvider>
+    <div class="grid grid-rows-[auto_1fr] w-full h-full">
+      <AppHeader />
+      <div class="grid grid-cols-[auto_1fr_auto] min-h-0 bg-surface gap-0">
+        <ToolSidebar />
+        <CanvasArea />
+        <PaletteSidebar />
+      </div>
     </div>
-  </div>
+  </TooltipProvider>
 </template>

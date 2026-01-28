@@ -1,6 +1,8 @@
 import type { Messages } from './types'
 
 const de: Messages = {
+  'actions.undo': 'Rückgängig',
+  'actions.redo': 'Wiederholen',
   'menu.image': 'Bild',
   'menu.image.new': 'Neu...',
   'menu.image.load': 'Bild laden',
@@ -26,9 +28,11 @@ const de: Messages = {
   'tools.shapeLine': 'Linie',
   'tools.shapeRect': 'Rechteck',
   'tools.shapeEllipse': 'Ellipse',
-  'tools.shapeFilled': 'Gefüllt (F)',
-  'tools.shapeSquare': 'Quadrat (Q)',
-  'tools.shapeCircle': 'Kreis (Q)',
+  'tools.shapeFilled': 'Gefüllt',
+  'tools.shapeFilledDesc': 'Gefüllte Form zeichnen',
+  'tools.shapeSquare': 'Quadrat',
+  'tools.shapeCircle': 'Kreis',
+  'tools.shapeConstrainDesc': 'Proportionen beibehalten',
   'palette.title': 'Farbpalette',
   'canvas.resetView': 'Ansicht zurücksetzen',
   'canvas.zoomIn': 'Vergrößern',

@@ -1,6 +1,8 @@
 export type Locale = 'en' | 'de'
 
 export interface Messages {
+  'actions.undo': string
+  'actions.redo': string
   'menu.image': string
   'menu.image.new': string
   'menu.image.load': string
@@ -27,8 +29,10 @@ export interface Messages {
   'tools.shapeRect': string
   'tools.shapeEllipse': string
   'tools.shapeFilled': string
+  'tools.shapeFilledDesc': string
   'tools.shapeSquare': string
   'tools.shapeCircle': string
+  'tools.shapeConstrainDesc': string
   'palette.title': string
   'canvas.resetView': string
   'canvas.zoomIn': string

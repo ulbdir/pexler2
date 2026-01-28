@@ -1,6 +1,8 @@
 import type { Messages } from './types'
 
 const en: Messages = {
+  'actions.undo': 'Undo',
+  'actions.redo': 'Redo',
   'menu.image': 'Image',
   'menu.image.new': 'New...',
   'menu.image.load': 'Load image',
@@ -26,9 +28,11 @@ const en: Messages = {
   'tools.shapeLine': 'Line',
   'tools.shapeRect': 'Rectangle',
   'tools.shapeEllipse': 'Ellipse',
-  'tools.shapeFilled': 'Filled (F)',
-  'tools.shapeSquare': 'Square (Q)',
-  'tools.shapeCircle': 'Circle (Q)',
+  'tools.shapeFilled': 'Filled',
+  'tools.shapeFilledDesc': 'Draw filled shape',
+  'tools.shapeSquare': 'Square',
+  'tools.shapeCircle': 'Circle',
+  'tools.shapeConstrainDesc': 'Constrain proportions',
   'palette.title': 'Palette',
   'canvas.resetView': 'Reset view',
   'canvas.zoomIn': 'Zoom in',
