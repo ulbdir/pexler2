@@ -164,15 +164,7 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     applyTool(e.clientX, e.clientY)
   }
 
-  function onPointerUp(e: PointerEvent) {
-    if (isDrawing) {
-      isDrawing = false
-      lastPos = null
-      canvasRef.value?.releasePointerCapture(e.pointerId)
-    }
-  }
-
-  function onPointerCancel(e: PointerEvent) {
+  function stopDrawing(e: PointerEvent): void {
     if (isDrawing) {
       isDrawing = false
       lastPos = null
@@ -202,8 +194,8 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     if (!canvas) return
     canvas.addEventListener('pointerdown', onPointerDown)
     canvas.addEventListener('pointermove', onPointerMove)
-    canvas.addEventListener('pointerup', onPointerUp)
-    canvas.addEventListener('pointercancel', onPointerCancel)
+    canvas.addEventListener('pointerup', stopDrawing)
+    canvas.addEventListener('pointercancel', stopDrawing)
     canvas.addEventListener('contextmenu', onContextMenu)
     document.addEventListener('keydown', onKeyDown)
   }
@@ -213,8 +205,8 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     if (!canvas) return
     canvas.removeEventListener('pointerdown', onPointerDown)
     canvas.removeEventListener('pointermove', onPointerMove)
-    canvas.removeEventListener('pointerup', onPointerUp)
-    canvas.removeEventListener('pointercancel', onPointerCancel)
+    canvas.removeEventListener('pointerup', stopDrawing)
+    canvas.removeEventListener('pointercancel', stopDrawing)
     canvas.removeEventListener('contextmenu', onContextMenu)
     document.removeEventListener('keydown', onKeyDown)
   }

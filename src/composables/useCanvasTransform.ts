@@ -5,7 +5,19 @@ export function useCanvasTransform() {
   const canvasStore = useCanvasStore()
   const historyStore = useHistoryStore()
 
-  function flipHorizontal() {
+  function copyPixel(
+    src: Uint8ClampedArray,
+    srcIdx: number,
+    dst: Uint8ClampedArray,
+    dstIdx: number
+  ): void {
+    dst[dstIdx] = src[srcIdx]!
+    dst[dstIdx + 1] = src[srcIdx + 1]!
+    dst[dstIdx + 2] = src[srcIdx + 2]!
+    dst[dstIdx + 3] = src[srcIdx + 3]!
+  }
+
+  function flipHorizontal(): void {
     historyStore.pushState()
 
     const { width, height, pixels } = canvasStore
@@ -25,7 +37,7 @@ export function useCanvasTransform() {
     canvasStore.bumpVersion()
   }
 
-  function flipVertical() {
+  function flipVertical(): void {
     historyStore.pushState()
 
     const { width, height, pixels } = canvasStore
@@ -45,7 +57,7 @@ export function useCanvasTransform() {
     canvasStore.bumpVersion()
   }
 
-  function rotate90() {
+  function rotate90(): void {
     historyStore.pushState()
 
     const { width, height, pixels } = canvasStore
@@ -56,21 +68,15 @@ export function useCanvasTransform() {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const srcIdx = (y * width + x) * 4
-        const newX = height - 1 - y
-        const newY = x
-        const dstIdx = (newY * newWidth + newX) * 4
-
-        newPixels[dstIdx] = pixels[srcIdx]!
-        newPixels[dstIdx + 1] = pixels[srcIdx + 1]!
-        newPixels[dstIdx + 2] = pixels[srcIdx + 2]!
-        newPixels[dstIdx + 3] = pixels[srcIdx + 3]!
+        const dstIdx = (x * newWidth + (height - 1 - y)) * 4
+        copyPixel(pixels, srcIdx, newPixels, dstIdx)
       }
     }
 
     canvasStore.setImageData(newPixels, newWidth, newHeight)
   }
 
-  function rotate180() {
+  function rotate180(): void {
     historyStore.pushState()
 
     const { width, height, pixels } = canvasStore
@@ -79,21 +85,15 @@ export function useCanvasTransform() {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const srcIdx = (y * width + x) * 4
-        const newX = width - 1 - x
-        const newY = height - 1 - y
-        const dstIdx = (newY * width + newX) * 4
-
-        newPixels[dstIdx] = pixels[srcIdx]!
-        newPixels[dstIdx + 1] = pixels[srcIdx + 1]!
-        newPixels[dstIdx + 2] = pixels[srcIdx + 2]!
-        newPixels[dstIdx + 3] = pixels[srcIdx + 3]!
+        const dstIdx = ((height - 1 - y) * width + (width - 1 - x)) * 4
+        copyPixel(pixels, srcIdx, newPixels, dstIdx)
       }
     }
 
     canvasStore.setImageData(newPixels, width, height)
   }
 
-  function rotate270() {
+  function rotate270(): void {
     historyStore.pushState()
 
     const { width, height, pixels } = canvasStore
@@ -104,14 +104,8 @@ export function useCanvasTransform() {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const srcIdx = (y * width + x) * 4
-        const newX = y
-        const newY = width - 1 - x
-        const dstIdx = (newY * newWidth + newX) * 4
-
-        newPixels[dstIdx] = pixels[srcIdx]!
-        newPixels[dstIdx + 1] = pixels[srcIdx + 1]!
-        newPixels[dstIdx + 2] = pixels[srcIdx + 2]!
-        newPixels[dstIdx + 3] = pixels[srcIdx + 3]!
+        const dstIdx = ((width - 1 - x) * newWidth + y) * 4
+        copyPixel(pixels, srcIdx, newPixels, dstIdx)
       }
     }
 

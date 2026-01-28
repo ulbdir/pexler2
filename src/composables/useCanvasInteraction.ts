@@ -55,14 +55,7 @@ export function useCanvasInteraction(canvasRef: Ref<HTMLCanvasElement | null>) {
     }
   }
 
-  function onPointerUp(e: PointerEvent) {
-    if (isPanning) {
-      isPanning = false
-      canvasRef.value?.releasePointerCapture(e.pointerId)
-    }
-  }
-
-  function onPointerCancel(e: PointerEvent) {
+  function stopPanning(e: PointerEvent): void {
     if (isPanning) {
       isPanning = false
       canvasRef.value?.releasePointerCapture(e.pointerId)
@@ -104,8 +97,8 @@ export function useCanvasInteraction(canvasRef: Ref<HTMLCanvasElement | null>) {
 
     canvas.addEventListener('pointerdown', onPointerDown)
     canvas.addEventListener('pointermove', onPointerMove)
-    canvas.addEventListener('pointerup', onPointerUp)
-    canvas.addEventListener('pointercancel', onPointerCancel)
+    canvas.addEventListener('pointerup', stopPanning)
+    canvas.addEventListener('pointercancel', stopPanning)
     canvas.addEventListener('wheel', onWheel, { passive: false })
     canvas.addEventListener('contextmenu', onContextMenu)
   }
@@ -116,8 +109,8 @@ export function useCanvasInteraction(canvasRef: Ref<HTMLCanvasElement | null>) {
 
     canvas.removeEventListener('pointerdown', onPointerDown)
     canvas.removeEventListener('pointermove', onPointerMove)
-    canvas.removeEventListener('pointerup', onPointerUp)
-    canvas.removeEventListener('pointercancel', onPointerCancel)
+    canvas.removeEventListener('pointerup', stopPanning)
+    canvas.removeEventListener('pointercancel', stopPanning)
     canvas.removeEventListener('wheel', onWheel)
     canvas.removeEventListener('contextmenu', onContextMenu)
   }
