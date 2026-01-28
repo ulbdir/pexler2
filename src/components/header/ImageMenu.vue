@@ -17,6 +17,7 @@ import {
   FlipVertical2,
   RotateCw,
   RotateCcw,
+  RefreshCw,
 } from 'lucide-vue-next'
 import { useI18n } from '@/i18n'
 import { useImageIO } from '@/composables/useImageIO'
@@ -103,7 +104,7 @@ async function onFileSelected(e: Event) {
           class="flex items-center gap-3 px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="rotate180"
         >
-          <RotateCw class="w-4 h-4 rotate-90" />
+          <RefreshCw class="w-4 h-4" />
           {{ t('menu.image.rotate180') }}
         </DropdownMenuItem>
         <DropdownMenuItem
