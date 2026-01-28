@@ -8,7 +8,16 @@ import {
   DropdownMenuPortal,
   DropdownMenuSeparator,
 } from 'radix-vue'
-import { ChevronDown } from 'lucide-vue-next'
+import {
+  ChevronDown,
+  FilePlus,
+  FolderOpen,
+  Download,
+  FlipHorizontal2,
+  FlipVertical2,
+  RotateCw,
+  RotateCcw,
+} from 'lucide-vue-next'
 import { useI18n } from '@/i18n'
 import { useImageIO } from '@/composables/useImageIO'
 import { useCanvasTransform } from '@/composables/useCanvasTransform'
@@ -47,53 +56,61 @@ async function onFileSelected(e: Event) {
         :side-offset="4"
       >
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="flex items-center gap-3 px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="showNewDialog = true"
         >
+          <FilePlus class="w-4 h-4" />
           {{ t('menu.image.new') }}
         </DropdownMenuItem>
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="flex items-center gap-3 px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="onLoadClick"
         >
+          <FolderOpen class="w-4 h-4" />
           {{ t('menu.image.load') }}
         </DropdownMenuItem>
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="flex items-center gap-3 px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="exportPNG"
         >
+          <Download class="w-4 h-4" />
           {{ t('menu.image.save') }}
         </DropdownMenuItem>
         <DropdownMenuSeparator class="h-px bg-edge my-1" />
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="flex items-center gap-3 px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="flipHorizontal"
         >
+          <FlipHorizontal2 class="w-4 h-4" />
           {{ t('menu.image.flipH') }}
         </DropdownMenuItem>
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="flex items-center gap-3 px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="flipVertical"
         >
+          <FlipVertical2 class="w-4 h-4" />
           {{ t('menu.image.flipV') }}
         </DropdownMenuItem>
         <DropdownMenuSeparator class="h-px bg-edge my-1" />
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="flex items-center gap-3 px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="rotate90"
         >
+          <RotateCw class="w-4 h-4" />
           {{ t('menu.image.rotate90') }}
         </DropdownMenuItem>
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="flex items-center gap-3 px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="rotate180"
         >
+          <RotateCw class="w-4 h-4 rotate-90" />
           {{ t('menu.image.rotate180') }}
         </DropdownMenuItem>
         <DropdownMenuItem
-          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          class="flex items-center gap-3 px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
           @select="rotate270"
         >
+          <RotateCcw class="w-4 h-4" />
           {{ t('menu.image.rotate270') }}
         </DropdownMenuItem>
       </DropdownMenuContent>
