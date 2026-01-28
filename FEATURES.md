@@ -33,6 +33,10 @@
 ### History
 - Undo/Redo (up to 50 states)
 
+### Canvas Transforms
+- Flip horizontal/vertical
+- Rotate 90°/180°/270° clockwise
+
 ### UI & Settings
 - Keyboard shortcuts for all tools and zoom
 - i18n support (English + German, auto-detected)
@@ -56,7 +60,6 @@ Features prioritized by usefulness, development effort, and integration fit (sco
 |---------|---|---|---|-------|-------------|
 | Line & Shape Tools | 5 | 4 | 5 | 14 | ✅ **COMPLETED**: Line, rectangle, ellipse with outline/filled toggle and square/circle constraints. Two-click interaction with live preview. |
 | Mirror / Symmetry Drawing | 5 | 4 | 5 | 14 | Horizontal/vertical axis symmetry while drawing. Duplicate setPixel with reflected coords. |
-| Flip & Rotate Canvas | 4 | 5 | 5 | 14 | Flip H/V, rotate 90/180/270. Pure pixel-data manipulation, ~20 lines each. |
 | Brush Size | 4 | 4 | 5 | 13 | Variable 1–16px brush with square/circle shapes. |
 | Pixel-Perfect Mode | 4 | 4 | 5 | 13 | Removes L-shaped double pixels when drawing freehand. Keeps lines clean. |
 | Scaled Export | 4 | 4 | 5 | 13 | Export at 2x/4x/8x scale with nearest-neighbor interpolation. |

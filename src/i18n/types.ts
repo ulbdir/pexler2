@@ -7,6 +7,11 @@ export interface Messages {
   'menu.image.new': string
   'menu.image.load': string
   'menu.image.save': string
+  'menu.image.flipH': string
+  'menu.image.flipV': string
+  'menu.image.rotate90': string
+  'menu.image.rotate180': string
+  'menu.image.rotate270': string
   'menu.palette': string
   'menu.palette.load': string
   'menu.palette.save': string
