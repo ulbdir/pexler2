@@ -4,8 +4,8 @@ import { Undo2, Redo2 } from 'lucide-vue-next'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useI18n } from '@/i18n'
 import Tooltip from '@/components/ui/Tooltip.vue'
-import BildMenu from '@/components/header/BildMenu.vue'
-import FarbpaletteMenu from '@/components/header/FarbpaletteMenu.vue'
+import ImageMenu from '@/components/header/ImageMenu.vue'
+import PaletteMenu from '@/components/header/PaletteMenu.vue'
 import SettingsButton from '@/components/header/SettingsButton.vue'
 
 const { t } = useI18n()
@@ -22,8 +22,8 @@ const modKey = isMac ? '⌘' : 'Ctrl+'
   <header class="grid grid-cols-3 items-center px-4 py-2 bg-surface border-b border-edge">
     <h1 class="font-pixel text-5xl drop-shadow-lg font-bold text-foreground-muted">Pexler</h1>
     <div class="flex items-center justify-center gap-1">
-      <BildMenu />
-      <FarbpaletteMenu />
+      <ImageMenu />
+      <PaletteMenu />
     </div>
     <div class="flex items-center justify-end gap-2">
       <div class="flex items-center gap-1">

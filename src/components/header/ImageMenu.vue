@@ -6,14 +6,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuPortal,
+  DropdownMenuSeparator,
 } from 'radix-vue'
 import { ChevronDown } from 'lucide-vue-next'
 import { useI18n } from '@/i18n'
 import { useImageIO } from '@/composables/useImageIO'
+import { useCanvasTransform } from '@/composables/useCanvasTransform'
 import NewCanvasDialog from '@/components/dialogs/NewCanvasDialog.vue'
 
 const { t } = useI18n()
 const { exportPNG, loadImage } = useImageIO()
+const { flipHorizontal, flipVertical, rotate90, rotate180, rotate270 } = useCanvasTransform()
 const fileInputRef = ref<HTMLInputElement | null>(null)
 const showNewDialog = ref(false)
 
@@ -60,6 +63,38 @@ async function onFileSelected(e: Event) {
           @select="exportPNG"
         >
           {{ t('menu.image.save') }}
+        </DropdownMenuItem>
+        <DropdownMenuSeparator class="h-px bg-edge my-1" />
+        <DropdownMenuItem
+          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          @select="flipHorizontal"
+        >
+          {{ t('menu.image.flipH') }}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          @select="flipVertical"
+        >
+          {{ t('menu.image.flipV') }}
+        </DropdownMenuItem>
+        <DropdownMenuSeparator class="h-px bg-edge my-1" />
+        <DropdownMenuItem
+          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          @select="rotate90"
+        >
+          {{ t('menu.image.rotate90') }}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          @select="rotate180"
+        >
+          {{ t('menu.image.rotate180') }}
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          class="px-3 py-1.5 text-sm text-foreground hover:bg-hover cursor-pointer outline-none"
+          @select="rotate270"
+        >
+          {{ t('menu.image.rotate270') }}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenuPortal>
