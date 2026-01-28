@@ -118,3 +118,9 @@ Unit tests live alongside source files:
 - `historyStore.test.ts` — undo/redo state machine, stack overflow
 - `paletteStore.test.ts` — color add/remove/dedup, image extraction
 - `settingsStore.test.ts` — resetView zoom/pan calculations
+
+## Feature Tracking
+
+`features.md` tracks implemented and upcoming features. When implementing a new feature:
+1. Add it to the appropriate "Implemented" subsection
+2. Remove it from the "Upcoming" table if it was listed there
