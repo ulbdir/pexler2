@@ -38,6 +38,9 @@ export interface Messages {
   'tools.shapeSquare': string
   'tools.shapeCircle': string
   'tools.shapeConstrainDesc': string
+  'tools.symmetry': string
+  'tools.mirrorHorizontalDesc': string
+  'tools.mirrorVerticalDesc': string
   'palette.title': string
   'canvas.resetView': string
   'canvas.zoomIn': string

@@ -141,6 +141,22 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
       }
       ctx.stroke()
     }
+
+    // Draw hover pixel highlight (only for pencil and eraser tools)
+    if (toolStore.hoverPosition && (toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser')) {
+      const points = toolStore.getSymmetryPoints(
+        toolStore.hoverPosition.x,
+        toolStore.hoverPosition.y,
+        imgW,
+        imgH
+      )
+      const color = paletteStore.selectedColor
+      ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.5)`
+      for (const p of points) {
+        if (p.x < 0 || p.x >= imgW || p.y < 0 || p.y >= imgH) continue
+        ctx.fillRect(panX + p.x * zoom, panY + p.y * zoom, zoom, zoom)
+      }
+    }
   }
 
   const stopWatch: WatchStopHandle = watch(
@@ -156,6 +172,9 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
       toolStore.shapeType,
       toolStore.shapeFilled,
       toolStore.shapeConstrain,
+      toolStore.hoverPosition,
+      toolStore.symmetryHorizontal,
+      toolStore.symmetryVertical,
       paletteStore.selectedColor,
     ],
     scheduleRender,

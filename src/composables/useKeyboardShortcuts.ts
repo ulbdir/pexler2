@@ -65,6 +65,16 @@ export function useKeyboardShortcuts() {
           toolStore.toggleShapeConstrain()
         }
         break
+      case 'h':
+        if (toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser') {
+          toolStore.toggleSymmetryHorizontal()
+        }
+        break
+      case 'v':
+        if (toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser') {
+          toolStore.toggleSymmetryVertical()
+        }
+        break
       case '+':
       case '=':
         settings.zoom = Math.min(64, Math.round(settings.zoom * 1.5))
