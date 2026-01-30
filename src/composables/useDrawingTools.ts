@@ -26,13 +26,13 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
       case 'pencil': {
         const color = paletteStore.selectedColor
         for (const p of points) {
-          canvasStore.setPixel(p.x, p.y, color)
+          canvasStore.setPixel(p.x, p.y, color, toolStore.blendMode)
         }
         break
       }
       case 'eraser': {
         for (const p of points) {
-          canvasStore.setPixel(p.x, p.y, { r: 0, g: 0, b: 0, a: 0 })
+          canvasStore.setPixel(p.x, p.y, { r: 0, g: 0, b: 0, a: 0 }, 'overwrite')
         }
         break
       }
@@ -49,7 +49,7 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
   function commitShape(start: Point, end: Point) {
     const color = paletteStore.selectedColor
     const setPixel = (x: number, y: number) => {
-      canvasStore.setPixel(x, y, color)
+      canvasStore.setPixel(x, y, color, toolStore.blendMode)
     }
 
     const resolved = resolveEnd(start, end)
@@ -90,7 +90,8 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
       case 'pencil':
       case 'eraser': {
         if (lastPos) {
-          bresenhamLine(lastPos, pos, applyAtPixel)
+          // Skip first pixel (already painted in previous segment) to prevent double-blending
+          bresenhamLine(lastPos, pos, applyAtPixel, true)
         } else {
           applyAtPixel(pos.x, pos.y)
         }

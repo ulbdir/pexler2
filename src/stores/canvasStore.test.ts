@@ -116,6 +116,75 @@ describe('canvasStore', () => {
     })
   })
 
+  describe('setPixel with blend mode', () => {
+    it('overwrites pixel when blendMode is not specified', () => {
+      const store = useCanvasStore()
+      store.createNew(4, 4)
+      store.setPixel(2, 2, { r: 255, g: 0, b: 0, a: 255 })
+      store.setPixel(2, 2, { r: 0, g: 255, b: 0, a: 255 })
+
+      expect(store.getPixel(2, 2)).toEqual({ r: 0, g: 255, b: 0, a: 255 })
+    })
+
+    it('overwrites pixel with overwrite mode', () => {
+      const store = useCanvasStore()
+      store.createNew(4, 4)
+      store.setPixel(2, 2, { r: 255, g: 0, b: 0, a: 255 }, 'overwrite')
+      store.setPixel(2, 2, { r: 0, g: 255, b: 0, a: 255 }, 'overwrite')
+
+      expect(store.getPixel(2, 2)).toEqual({ r: 0, g: 255, b: 0, a: 255 })
+    })
+
+    it('blends semi-transparent color over opaque background', () => {
+      const store = useCanvasStore()
+      store.createNew(4, 4)
+      // Red opaque background
+      store.setPixel(2, 2, { r: 255, g: 0, b: 0, a: 255 })
+      // 50% transparent blue
+      store.setPixel(2, 2, { r: 0, g: 0, b: 255, a: 128 }, 'blend')
+
+      const pixel = store.getPixel(2, 2)
+      // Result should be approximately purple (127-128 red + 127-128 blue)
+      // Due to rounding: (0*128 + 255*127)/255 = 127 exactly
+      expect(pixel.r).toBeGreaterThanOrEqual(127)
+      expect(pixel.r).toBeLessThanOrEqual(128)
+      expect(pixel.g).toBe(0)
+      expect(pixel.b).toBeGreaterThanOrEqual(127)
+      expect(pixel.b).toBeLessThanOrEqual(128)
+      expect(pixel.a).toBeGreaterThanOrEqual(191)
+    })
+
+    it('blends opaque color over transparent background', () => {
+      const store = useCanvasStore()
+      store.createNew(4, 4)
+      // Opaque red over transparent
+      store.setPixel(2, 2, { r: 255, g: 0, b: 0, a: 255 }, 'blend')
+
+      expect(store.getPixel(2, 2)).toEqual({ r: 255, g: 0, b: 0, a: 255 })
+    })
+
+    it('does not change pixel when blending with zero alpha', () => {
+      const store = useCanvasStore()
+      store.createNew(4, 4)
+      store.setPixel(2, 2, { r: 255, g: 0, b: 0, a: 255 })
+      // Fully transparent color
+      store.setPixel(2, 2, { r: 0, g: 255, b: 0, a: 0 }, 'blend')
+
+      expect(store.getPixel(2, 2)).toEqual({ r: 255, g: 0, b: 0, a: 255 })
+    })
+
+    it('is a no-op for out-of-bounds coordinates in blend mode', () => {
+      const store = useCanvasStore()
+      store.createNew(4, 4)
+      const before = new Uint8ClampedArray(store.pixels)
+
+      store.setPixel(-1, 0, { r: 255, g: 0, b: 0, a: 255 }, 'blend')
+      store.setPixel(0, 4, { r: 255, g: 0, b: 0, a: 255 }, 'blend')
+
+      expect(store.pixels).toEqual(before)
+    })
+  })
+
   describe('getSnapshot / restoreSnapshot', () => {
     it('getSnapshot returns an independent copy', () => {
       const store = useCanvasStore()

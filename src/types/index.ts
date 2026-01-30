@@ -2,6 +2,8 @@ export type ToolType = 'pencil' | 'eraser' | 'fill' | 'eyedropper' | 'shape'
 
 export type ShapeType = 'line' | 'rect' | 'ellipse'
 
+export type BlendMode = 'overwrite' | 'blend'
+
 export interface RGBA {
   r: number
   g: number
