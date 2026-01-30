@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Pencil, Eraser, PaintBucket, Pipette, Shapes, Minus, Square, Circle } from 'lucide-vue-next'
+import { Pencil, Eraser, PaintBucket, Pipette, Shapes, Minus, Square, Circle, FlipHorizontal, FlipVertical } from 'lucide-vue-next'
 import { useI18n } from '@/i18n'
 import { useToolStore } from '@/stores/toolStore'
 import ToolButton from './ToolButton.vue'
@@ -11,6 +11,7 @@ const { t } = useI18n()
 const toolStore = useToolStore()
 
 const isShapeActive = computed(() => toolStore.activeTool === 'shape')
+const isPencilOrEraserActive = computed(() => toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser')
 
 function setShapeType(type: ShapeType) {
   toolStore.setShapeType(type)
@@ -99,6 +100,35 @@ function setShapeType(type: ShapeType) {
             />
             {{ toolStore.shapeType === 'rect' ? t('tools.shapeSquare') : t('tools.shapeCircle') }}
           </label>
+        </Tooltip>
+      </div>
+    </div>
+
+    <!-- Symmetry options (visible when pencil or eraser tool is active) -->
+    <div v-if="isPencilOrEraserActive" class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
+      <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.symmetry') }}</h3>
+      <div class="grid grid-cols-2 gap-1">
+        <Tooltip :label="t('tools.mirrorHorizontalDesc')" shortcut="H">
+          <button
+            class="w-full h-7 flex items-center justify-center border rounded transition-colors"
+            :class="toolStore.symmetryHorizontal
+              ? 'bg-surface-selected border-edge-active'
+              : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
+            @click="toolStore.toggleSymmetryHorizontal()"
+          >
+            <FlipVertical class="w-3.5 h-3.5 text-foreground-secondary" />
+          </button>
+        </Tooltip>
+        <Tooltip :label="t('tools.mirrorVerticalDesc')" shortcut="V">
+          <button
+            class="w-full h-7 flex items-center justify-center border rounded transition-colors"
+            :class="toolStore.symmetryVertical
+              ? 'bg-surface-selected border-edge-active'
+              : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
+            @click="toolStore.toggleSymmetryVertical()"
+          >
+            <FlipHorizontal class="w-3.5 h-3.5 text-foreground-secondary" />
+          </button>
         </Tooltip>
       </div>
     </div>

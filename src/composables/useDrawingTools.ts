@@ -20,15 +20,20 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
 
   function applyAtPixel(x: number, y: number) {
     const tool = toolStore.activeTool
+    const points = toolStore.getSymmetryPoints(x, y, canvasStore.width, canvasStore.height)
 
     switch (tool) {
       case 'pencil': {
         const color = paletteStore.selectedColor
-        canvasStore.setPixel(x, y, color)
+        for (const p of points) {
+          canvasStore.setPixel(p.x, p.y, color)
+        }
         break
       }
       case 'eraser': {
-        canvasStore.setPixel(x, y, { r: 0, g: 0, b: 0, a: 0 })
+        for (const p of points) {
+          canvasStore.setPixel(p.x, p.y, { r: 0, g: 0, b: 0, a: 0 })
+        }
         break
       }
     }
@@ -150,9 +155,14 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
   function onPointerMove(e: PointerEvent) {
     const tool = toolStore.activeTool
 
+    // Track hover position for all tools
+    const pos = screenToImage(canvasRef.value, e.clientX, e.clientY)
+    if (pos) {
+      toolStore.setHoverPosition(pos)
+    }
+
     if (tool === 'shape' && toolStore.pendingShape) {
       // Update preview endpoint
-      const pos = screenToImage(canvasRef.value, e.clientX, e.clientY)
       if (pos) {
         toolStore.setPendingShape({ start: toolStore.pendingShape.start, end: pos })
       }
@@ -189,6 +199,10 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     }
   }
 
+  function onMouseLeave() {
+    toolStore.setHoverPosition(null)
+  }
+
   function attach() {
     const canvas = canvasRef.value
     if (!canvas) return
@@ -197,6 +211,7 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     canvas.addEventListener('pointerup', stopDrawing)
     canvas.addEventListener('pointercancel', stopDrawing)
     canvas.addEventListener('contextmenu', onContextMenu)
+    canvas.addEventListener('mouseleave', onMouseLeave)
     document.addEventListener('keydown', onKeyDown)
   }
 
@@ -208,6 +223,7 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     canvas.removeEventListener('pointerup', stopDrawing)
     canvas.removeEventListener('pointercancel', stopDrawing)
     canvas.removeEventListener('contextmenu', onContextMenu)
+    canvas.removeEventListener('mouseleave', onMouseLeave)
     document.removeEventListener('keydown', onKeyDown)
   }
 
