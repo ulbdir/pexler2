@@ -39,9 +39,7 @@ export interface Messages {
   'tools.shapeCircle': string
   'tools.shapeConstrainDesc': string
   'tools.symmetry': string
-  'tools.mirrorHorizontal': string
   'tools.mirrorHorizontalDesc': string
-  'tools.mirrorVertical': string
   'tools.mirrorVerticalDesc': string
   'palette.title': string
   'canvas.resetView': string

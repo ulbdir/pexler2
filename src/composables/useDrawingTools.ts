@@ -154,11 +154,15 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
 
   function onPointerMove(e: PointerEvent) {
     const tool = toolStore.activeTool
-
-    // Track hover position for all tools
     const pos = screenToImage(canvasRef.value, e.clientX, e.clientY)
-    if (pos) {
-      toolStore.setHoverPosition(pos)
+
+    // Track hover position for pencil/eraser (used for symmetry preview)
+    if (tool === 'pencil' || tool === 'eraser') {
+      if (pos) {
+        toolStore.setHoverPosition(pos)
+      }
+    } else {
+      toolStore.setHoverPosition(null)
     }
 
     if (tool === 'shape' && toolStore.pendingShape) {

@@ -98,6 +98,9 @@ src/
 | E | Eraser |
 | G | Fill |
 | I | Eyedropper |
+| S | Shape |
+| H | Toggle horizontal symmetry (pencil/eraser) |
+| V | Toggle vertical symmetry (pencil/eraser) |
 | + / = | Zoom in |
 | - | Zoom out |
 | Ctrl/Cmd+Z | Undo |

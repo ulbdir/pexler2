@@ -116,7 +116,7 @@ function setShapeType(type: ShapeType) {
               : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
             @click="toolStore.toggleSymmetryHorizontal()"
           >
-            <FlipVertical class="w-3.5 h-3.5 text-foreground-secondary" />
+            <FlipHorizontal class="w-3.5 h-3.5 text-foreground-secondary" />
           </button>
         </Tooltip>
         <Tooltip :label="t('tools.mirrorVerticalDesc')" shortcut="V">
@@ -127,7 +127,7 @@ function setShapeType(type: ShapeType) {
               : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
             @click="toolStore.toggleSymmetryVertical()"
           >
-            <FlipHorizontal class="w-3.5 h-3.5 text-foreground-secondary" />
+            <FlipVertical class="w-3.5 h-3.5 text-foreground-secondary" />
           </button>
         </Tooltip>
       </div>
