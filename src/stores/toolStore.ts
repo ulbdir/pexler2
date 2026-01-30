@@ -22,6 +22,7 @@ export const useToolStore = defineStore('tool', () => {
   function setTool(tool: ToolType) {
     activeTool.value = tool
     pendingShape.value = null
+    hoverPosition.value = null
   }
 
   function setShapeType(type: ShapeType) {
@@ -57,16 +58,14 @@ export const useToolStore = defineStore('tool', () => {
     const points: Point[] = [{ x, y }]
 
     if (symmetryHorizontal.value) {
-      const centerY = Math.floor(canvasHeight / 2)
-      const mirrorY = 2 * centerY - y - 1
+      const mirrorY = (canvasHeight - 1) - y
       if (mirrorY !== y && mirrorY >= 0 && mirrorY < canvasHeight) {
         points.push({ x, y: mirrorY })
       }
     }
 
     if (symmetryVertical.value) {
-      const centerX = Math.floor(canvasWidth / 2)
-      const mirrorX = 2 * centerX - x - 1
+      const mirrorX = (canvasWidth - 1) - x
       if (mirrorX !== x && mirrorX >= 0 && mirrorX < canvasWidth) {
         points.push({ x: mirrorX, y })
       }
@@ -74,10 +73,8 @@ export const useToolStore = defineStore('tool', () => {
 
     // If both symmetries are enabled, also add the diagonal mirror point
     if (symmetryHorizontal.value && symmetryVertical.value) {
-      const centerX = Math.floor(canvasWidth / 2)
-      const centerY = Math.floor(canvasHeight / 2)
-      const mirrorX = 2 * centerX - x - 1
-      const mirrorY = 2 * centerY - y - 1
+      const mirrorX = (canvasWidth - 1) - x
+      const mirrorY = (canvasHeight - 1) - y
       if (mirrorX !== x && mirrorY !== y && mirrorX >= 0 && mirrorX < canvasWidth && mirrorY >= 0 && mirrorY < canvasHeight) {
         points.push({ x: mirrorX, y: mirrorY })
       }

@@ -142,8 +142,8 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
       ctx.stroke()
     }
 
-    // Draw hover pixel highlight
-    if (toolStore.hoverPosition) {
+    // Draw hover pixel highlight (only for pencil and eraser tools)
+    if (toolStore.hoverPosition && (toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser')) {
       const points = toolStore.getSymmetryPoints(
         toolStore.hoverPosition.x,
         toolStore.hoverPosition.y,
