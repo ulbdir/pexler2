@@ -41,6 +41,11 @@ export interface Messages {
   'tools.symmetry': string
   'tools.mirrorHorizontalDesc': string
   'tools.mirrorVerticalDesc': string
+  'tools.blendMode': string
+  'tools.blendModeOverwrite': string
+  'tools.blendModeBlend': string
+  'tools.blendModeOverwriteDesc': string
+  'tools.blendModeBlendDesc': string
   'palette.title': string
   'canvas.resetView': string
   'canvas.zoomIn': string

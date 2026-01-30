@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { ToolType, ShapeType, Point } from '@/types'
+import type { ToolType, ShapeType, Point, BlendMode } from '@/types'
 
 export interface PendingShape {
   start: Point
@@ -18,6 +18,9 @@ export const useToolStore = defineStore('tool', () => {
   const symmetryHorizontal = ref(false)
   const symmetryVertical = ref(false)
   const hoverPosition = ref<Point | null>(null)
+
+  // Blend mode state (shared between pencil and shape tools)
+  const blendMode = ref<BlendMode>('overwrite')
 
   function setTool(tool: ToolType) {
     activeTool.value = tool
@@ -48,6 +51,14 @@ export const useToolStore = defineStore('tool', () => {
 
   function toggleSymmetryVertical() {
     symmetryVertical.value = !symmetryVertical.value
+  }
+
+  function toggleBlendMode() {
+    blendMode.value = blendMode.value === 'overwrite' ? 'blend' : 'overwrite'
+  }
+
+  function setBlendMode(mode: BlendMode) {
+    blendMode.value = mode
   }
 
   function setHoverPosition(pos: Point | null) {
@@ -92,6 +103,7 @@ export const useToolStore = defineStore('tool', () => {
     symmetryHorizontal.value = false
     symmetryVertical.value = false
     hoverPosition.value = null
+    blendMode.value = 'overwrite'
   }
 
   return {
@@ -102,6 +114,7 @@ export const useToolStore = defineStore('tool', () => {
     pendingShape,
     symmetryHorizontal,
     symmetryVertical,
+    blendMode,
     hoverPosition,
     setTool,
     setShapeType,
@@ -110,6 +123,8 @@ export const useToolStore = defineStore('tool', () => {
     setPendingShape,
     toggleSymmetryHorizontal,
     toggleSymmetryVertical,
+    toggleBlendMode,
+    setBlendMode,
     setHoverPosition,
     getSymmetryPoints,
     $reset,

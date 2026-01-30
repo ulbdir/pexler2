@@ -75,6 +75,11 @@ export function useKeyboardShortcuts() {
           toolStore.toggleSymmetryVertical()
         }
         break
+      case 'b':
+        if (toolStore.activeTool === 'pencil' || toolStore.activeTool === 'shape') {
+          toolStore.toggleBlendMode()
+        }
+        break
       case '+':
       case '=':
         settings.zoom = Math.min(64, Math.round(settings.zoom * 1.5))

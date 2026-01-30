@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Pencil, Eraser, PaintBucket, Pipette, Shapes, Minus, Square, Circle, FlipHorizontal, FlipVertical } from 'lucide-vue-next'
+import { Pencil, Eraser, PaintBucket, Pipette, Shapes, Minus, Square, Circle, FlipHorizontal, FlipVertical, Blend } from 'lucide-vue-next'
 import { useI18n } from '@/i18n'
 import { useToolStore } from '@/stores/toolStore'
 import ToolButton from './ToolButton.vue'
@@ -12,6 +12,7 @@ const toolStore = useToolStore()
 
 const isShapeActive = computed(() => toolStore.activeTool === 'shape')
 const isPencilOrEraserActive = computed(() => toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser')
+const isBlendModeVisible = computed(() => toolStore.activeTool === 'pencil' || toolStore.activeTool === 'shape')
 
 function setShapeType(type: ShapeType) {
   toolStore.setShapeType(type)
@@ -116,7 +117,7 @@ function setShapeType(type: ShapeType) {
               : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
             @click="toolStore.toggleSymmetryHorizontal()"
           >
-            <FlipHorizontal class="w-3.5 h-3.5 text-foreground-secondary" />
+            <FlipVertical class="w-3.5 h-3.5 text-foreground-secondary" />
           </button>
         </Tooltip>
         <Tooltip :label="t('tools.mirrorVerticalDesc')" shortcut="V">
@@ -127,10 +128,26 @@ function setShapeType(type: ShapeType) {
               : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
             @click="toolStore.toggleSymmetryVertical()"
           >
-            <FlipVertical class="w-3.5 h-3.5 text-foreground-secondary" />
+            <FlipHorizontal class="w-3.5 h-3.5 text-foreground-secondary" />
           </button>
         </Tooltip>
       </div>
+    </div>
+
+    <!-- Blend mode toggle (visible when pencil or shape tool is active) -->
+    <div v-if="isBlendModeVisible" class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
+      <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.blendMode') }}</h3>
+      <Tooltip :label="toolStore.blendMode === 'blend' ? t('tools.blendModeOverwriteDesc') : t('tools.blendModeBlendDesc')" shortcut="B">
+        <button
+          class="w-full h-7 flex items-center justify-center border rounded transition-colors"
+          :class="toolStore.blendMode === 'blend'
+            ? 'bg-surface-selected border-edge-active'
+            : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
+          @click="toolStore.toggleBlendMode()"
+        >
+          <Blend class="w-3.5 h-3.5 text-foreground-secondary" />
+        </button>
+      </Tooltip>
     </div>
   </div>
 </template>

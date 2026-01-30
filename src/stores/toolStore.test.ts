@@ -22,6 +22,11 @@ describe('toolStore', () => {
       const store = useToolStore()
       expect(store.hoverPosition).toBeNull()
     })
+
+    it('blendMode defaults to overwrite', () => {
+      const store = useToolStore()
+      expect(store.blendMode).toBe('overwrite')
+    })
   })
 
   describe('toggleSymmetryHorizontal', () => {
@@ -51,6 +56,36 @@ describe('toolStore', () => {
       store.symmetryVertical = true
       store.toggleSymmetryVertical()
       expect(store.symmetryVertical).toBe(false)
+    })
+  })
+
+  describe('toggleBlendMode', () => {
+    it('toggles blendMode from overwrite to blend', () => {
+      const store = useToolStore()
+      store.toggleBlendMode()
+      expect(store.blendMode).toBe('blend')
+    })
+
+    it('toggles blendMode from blend to overwrite', () => {
+      const store = useToolStore()
+      store.blendMode = 'blend'
+      store.toggleBlendMode()
+      expect(store.blendMode).toBe('overwrite')
+    })
+  })
+
+  describe('setBlendMode', () => {
+    it('sets blendMode to blend', () => {
+      const store = useToolStore()
+      store.setBlendMode('blend')
+      expect(store.blendMode).toBe('blend')
+    })
+
+    it('sets blendMode to overwrite', () => {
+      const store = useToolStore()
+      store.blendMode = 'blend'
+      store.setBlendMode('overwrite')
+      expect(store.blendMode).toBe('overwrite')
     })
   })
 
@@ -395,11 +430,13 @@ describe('toolStore', () => {
       store.setShapeType('rect')
       store.shapeFilled = true
       store.shapeConstrain = true
+      store.setBlendMode('blend')
       store.$reset()
       expect(store.activeTool).toBe('pencil')
       expect(store.shapeType).toBe('line')
       expect(store.shapeFilled).toBe(false)
       expect(store.shapeConstrain).toBe(false)
+      expect(store.blendMode).toBe('overwrite')
     })
   })
 })

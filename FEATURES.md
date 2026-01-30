@@ -8,6 +8,9 @@
 - **Flood Fill** (`G`) — Stack-based 4-directional fill
 - **Eyedropper** (`I`) — Pick color from canvas
 - **Shape tool** (`S`) — Line, Rectangle, Ellipse with outline/filled toggle and square/circle constraints
+- **Blend Mode** — Overwrite or blend mode for Pencil and Shape tools. Blend applies color with transparency over existing pixels
+- **Mirror / Symmetry Drawing** — Horizontal/vertical axis symmetry while drawing with live preview
+- **Blend Mode** — Overwrite or blend mode for Pencil and Shape tools. Blend applies color with transparency over existing pixels using alpha blending
 
 ### Canvas & View
 - Configurable canvas size (1–512px, presets: 16x16, 32x32, 64x64, 128x128)
@@ -47,6 +50,7 @@
 - `F` — Toggle outline/filled (when shape tool active)
 - `Q` — Toggle square/circle constraint (when rectangle/ellipse shape active)
 - `1`/`2`/`3` — Select Line/Rectangle/Ellipse (when shape tool active)
+- `B` — Toggle blend mode overwrite/blend (when pencil/shape active)
 
 ---
 
@@ -58,8 +62,6 @@ Features prioritized by usefulness, development effort, and integration fit (sco
 
 | Feature | U | D | I | Total | Description |
 |---------|---|---|---|-------|-------------|
-| Line & Shape Tools | 5 | 4 | 5 | 14 | ✅ **COMPLETED**: Line, rectangle, ellipse with outline/filled toggle and square/circle constraints. Two-click interaction with live preview. |
-| Mirror / Symmetry Drawing | 5 | 4 | 5 | 14 | Horizontal/vertical axis symmetry while drawing. Duplicate setPixel with reflected coords. |
 | Brush Size | 4 | 4 | 5 | 13 | Variable 1–16px brush with square/circle shapes. |
 | Pixel-Perfect Mode | 4 | 4 | 5 | 13 | Removes L-shaped double pixels when drawing freehand. Keeps lines clean. |
 | Scaled Export | 4 | 4 | 5 | 13 | Export at 2x/4x/8x scale with nearest-neighbor interpolation. |
