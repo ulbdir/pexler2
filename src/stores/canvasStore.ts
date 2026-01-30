@@ -28,7 +28,7 @@ export const useCanvasStore = defineStore('canvas', () => {
     }
   }
 
-  function setPixel(x: number, y: number, color: RGBA, blendMode?: BlendMode) {
+  function setPixel(x: number, y: number, color: RGBA, blendMode: BlendMode = 'overwrite') {
     if (x < 0 || x >= width.value || y < 0 || y >= height.value) return
     const i = (y * width.value + x) * 4
 

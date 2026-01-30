@@ -17,12 +17,6 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
 
   let isDrawing = false
   let lastPos: Point | null = null
-  // Track last painted position to prevent double-painting the same pixel
-  let lastPaintedPos: Point | null = null
-
-  function pointsEqual(a: Point, b: Point): boolean {
-    return a.x === b.x && a.y === b.y
-  }
 
   function applyAtPixel(x: number, y: number) {
     const tool = toolStore.activeTool
@@ -95,20 +89,13 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     switch (tool) {
       case 'pencil':
       case 'eraser': {
-        // Skip if we're at the same position as last paint (prevents double-blending)
-        if (lastPaintedPos && pointsEqual(lastPaintedPos, pos)) {
-          // Still update lastPos for line continuity, but don't paint
-          lastPos = pos
-          break
-        }
-        
         if (lastPos) {
-          bresenhamLine(lastPos, pos, applyAtPixel)
+          // Skip first pixel (already painted in previous segment) to prevent double-blending
+          bresenhamLine(lastPos, pos, applyAtPixel, true)
         } else {
           applyAtPixel(pos.x, pos.y)
         }
         lastPos = pos
-        lastPaintedPos = pos
         canvasStore.bumpVersion()
         if (tool === 'pencil' && paletteStore.autoAdd) {
           paletteStore.addColor(paletteStore.selectedColor)
@@ -157,8 +144,6 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
 
     isDrawing = true
     lastPos = null
-    // Clear last painted position tracking
-    lastPaintedPos = null
     canvasRef.value?.setPointerCapture(e.pointerId)
 
     if (tool !== 'eyedropper') {
@@ -198,8 +183,6 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     if (isDrawing) {
       isDrawing = false
       lastPos = null
-      // Clear last painted position tracking
-      lastPaintedPos = null
       canvasRef.value?.releasePointerCapture(e.pointerId)
     }
   }

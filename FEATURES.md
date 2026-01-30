@@ -8,9 +8,8 @@
 - **Flood Fill** (`G`) — Stack-based 4-directional fill
 - **Eyedropper** (`I`) — Pick color from canvas
 - **Shape tool** (`S`) — Line, Rectangle, Ellipse with outline/filled toggle and square/circle constraints
-- **Blend Mode** — Overwrite or blend mode for Pencil and Shape tools. Blend applies color with transparency over existing pixels
 - **Mirror / Symmetry Drawing** — Horizontal/vertical axis symmetry while drawing with live preview
-- **Blend Mode** — Overwrite or blend mode for Pencil and Shape tools. Blend applies color with transparency over existing pixels using alpha blending
+- **Blend Mode** (`B`) — Overwrite or blend mode for Pencil and Shape tools. Blend applies color with transparency over existing pixels using alpha blending
 
 ### Canvas & View
 - Configurable canvas size (1–512px, presets: 16x16, 32x32, 64x64, 128x128)

@@ -107,4 +107,36 @@ describe('bresenhamLine', () => {
     expect(points[0]).toEqual({ x: 1, y: 2 })
     expect(points[points.length - 1]).toEqual({ x: 7, y: 5 })
   })
+
+  describe('skipFirst parameter', () => {
+    function collectPointsSkipFirst(from: { x: number; y: number }, to: { x: number; y: number }) {
+      const points: { x: number; y: number }[] = []
+      bresenhamLine(from, to, (x, y) => points.push({ x, y }), true)
+      return points
+    }
+
+    it('skips first point when skipFirst is true', () => {
+      const points = collectPointsSkipFirst({ x: 0, y: 0 }, { x: 4, y: 0 })
+      expect(points).toEqual([
+        { x: 1, y: 0 },
+        { x: 2, y: 0 },
+        { x: 3, y: 0 },
+        { x: 4, y: 0 },
+      ])
+    })
+
+    it('returns empty array when from equals to with skipFirst', () => {
+      const points = collectPointsSkipFirst({ x: 3, y: 3 }, { x: 3, y: 3 })
+      expect(points).toEqual([])
+    })
+
+    it('skips first point on diagonal', () => {
+      const points = collectPointsSkipFirst({ x: 0, y: 0 }, { x: 3, y: 3 })
+      expect(points).toEqual([
+        { x: 1, y: 1 },
+        { x: 2, y: 2 },
+        { x: 3, y: 3 },
+      ])
+    })
+  })
 })

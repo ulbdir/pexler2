@@ -42,8 +42,6 @@ const en: Messages = {
   'tools.mirrorHorizontalDesc': 'Mirror across horizontal axis',
   'tools.mirrorVerticalDesc': 'Mirror across vertical axis',
   'tools.blendMode': 'Blend Mode',
-  'tools.blendModeOverwrite': 'Overwrite',
-  'tools.blendModeBlend': 'Blend',
   'tools.blendModeOverwriteDesc': 'Replace pixel color completely',
   'tools.blendModeBlendDesc': 'Mix colors using transparency (alpha blending)',
   'palette.title': 'Palette',

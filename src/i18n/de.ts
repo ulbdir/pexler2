@@ -42,8 +42,6 @@ const de: Messages = {
   'tools.mirrorHorizontalDesc': 'An horizontaler Achse spiegeln',
   'tools.mirrorVerticalDesc': 'An vertikaler Achse spiegeln',
   'tools.blendMode': 'Mischmodus',
-  'tools.blendModeOverwrite': 'Überschreiben',
-  'tools.blendModeBlend': 'Mischen',
   'tools.blendModeOverwriteDesc': 'Pixelfarbe komplett ersetzen',
   'tools.blendModeBlendDesc': 'Farben mit Transparenz mischen (Alpha-Blending)',
   'palette.title': 'Farbpalette',
