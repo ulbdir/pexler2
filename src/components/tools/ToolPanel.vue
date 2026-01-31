@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Pencil, Eraser, PaintBucket, Pipette, Shapes, Minus, Square, Circle, FlipHorizontal, FlipVertical, Blend } from 'lucide-vue-next'
+import { Pencil, Eraser, PaintBucket, Pipette, Shapes, Minus, Square, Circle, FlipHorizontal, FlipVertical, Blend, Plus } from 'lucide-vue-next'
 import { useI18n } from '@/i18n'
 import { useToolStore } from '@/stores/toolStore'
 import ToolButton from './ToolButton.vue'
@@ -12,7 +12,6 @@ const toolStore = useToolStore()
 
 const isShapeActive = computed(() => toolStore.activeTool === 'shape')
 const isPencilOrEraserActive = computed(() => toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser')
-const isBlendModeVisible = computed(() => toolStore.activeTool === 'pencil' || toolStore.activeTool === 'shape')
 
 function setShapeType(type: ShapeType) {
   toolStore.setShapeType(type)
@@ -40,114 +39,205 @@ function setShapeType(type: ShapeType) {
       </ToolButton>
     </div>
 
-    <!-- Shape options (visible when shape tool is active) -->
-    <div v-if="isShapeActive" class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
-      <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.shapeType') }}</h3>
-      <div class="grid grid-cols-3 gap-1">
-        <Tooltip :label="t('tools.shapeLine')" shortcut="1">
+    <!-- Pencil/Eraser options -->
+    <template v-if="isPencilOrEraserActive">
+      <!-- Brush Size -->
+      <div class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
+        <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.brushSize') }}</h3>
+        
+        <!-- Stepper: decrease / size display / increase -->
+        <div class="flex items-center gap-1">
+          <Tooltip :label="t('tools.brushSizeDecrease')" shortcut="[">
+            <button
+              class="w-7 h-7 flex items-center justify-center border rounded transition-colors bg-surface-overlay border-edge-subtle hover:bg-hover disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="toolStore.brushSize <= 1"
+              @click="toolStore.decreaseBrushSize()"
+            >
+              <Minus class="w-3.5 h-3.5 text-foreground-secondary" />
+            </button>
+          </Tooltip>
+          <span class="flex-1 text-center text-sm text-foreground-secondary font-medium">{{ toolStore.brushSize }}px</span>
+          <Tooltip :label="t('tools.brushSizeIncrease')" shortcut="]">
+            <button
+              class="w-7 h-7 flex items-center justify-center border rounded transition-colors bg-surface-overlay border-edge-subtle hover:bg-hover disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="toolStore.brushSize >= 16"
+              @click="toolStore.increaseBrushSize()"
+            >
+              <Plus class="w-3.5 h-3.5 text-foreground-secondary" />
+            </button>
+          </Tooltip>
+        </div>
+
+        <!-- Quick preset buttons -->
+        <div class="grid grid-cols-4 gap-1">
+          <Tooltip v-for="size in [1, 3, 5, 8]" :key="size" :label="`${size}px`">
+            <button
+              class="w-full h-7 flex items-center justify-center border rounded transition-colors text-xs font-medium"
+              :class="toolStore.brushSize === size
+                ? 'bg-surface-selected border-edge-active text-foreground'
+                : 'bg-surface-overlay border-edge-subtle hover:bg-hover text-foreground-secondary'"
+              @click="toolStore.setBrushSize(size)"
+            >
+              {{ size }}
+            </button>
+          </Tooltip>
+        </div>
+
+        <!-- Shape toggle: square / circle -->
+        <div class="grid grid-cols-2 gap-1">
+          <Tooltip :label="t('tools.brushSquare')">
+            <button
+              class="w-full h-7 flex items-center justify-center border rounded transition-colors"
+              :class="toolStore.brushShape === 'square'
+                ? 'bg-surface-selected border-edge-active'
+                : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
+              @click="toolStore.setBrushShape('square')"
+            >
+              <Square class="w-3.5 h-3.5 text-foreground-secondary" />
+            </button>
+          </Tooltip>
+          <Tooltip :label="t('tools.brushCircle')">
+            <button
+              class="w-full h-7 flex items-center justify-center border rounded transition-colors"
+              :class="toolStore.brushShape === 'circle'
+                ? 'bg-surface-selected border-edge-active'
+                : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
+              @click="toolStore.setBrushShape('circle')"
+            >
+              <Circle class="w-3.5 h-3.5 text-foreground-secondary" />
+            </button>
+          </Tooltip>
+        </div>
+      </div>
+
+      <!-- Blend Mode (pencil only) -->
+      <div v-if="toolStore.activeTool === 'pencil'" class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
+        <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.blendMode') }}</h3>
+        <Tooltip :label="toolStore.blendMode === 'blend' ? t('tools.blendModeOverwriteDesc') : t('tools.blendModeBlendDesc')" shortcut="B">
           <button
             class="w-full h-7 flex items-center justify-center border rounded transition-colors"
-            :class="toolStore.shapeType === 'line'
+            :class="toolStore.blendMode === 'blend'
               ? 'bg-surface-selected border-edge-active'
               : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
-            @click="setShapeType('line')"
+            @click="toolStore.toggleBlendMode()"
           >
-            <Minus class="w-3.5 h-3.5 text-foreground-secondary" />
-          </button>
-        </Tooltip>
-        <Tooltip :label="t('tools.shapeRect')" shortcut="2">
-          <button
-            class="w-full h-7 flex items-center justify-center border rounded transition-colors"
-            :class="toolStore.shapeType === 'rect'
-              ? 'bg-surface-selected border-edge-active'
-              : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
-            @click="setShapeType('rect')"
-          >
-            <Square class="w-3.5 h-3.5 text-foreground-secondary" />
-          </button>
-        </Tooltip>
-        <Tooltip :label="t('tools.shapeEllipse')" shortcut="3">
-          <button
-            class="w-full h-7 flex items-center justify-center border rounded transition-colors"
-            :class="toolStore.shapeType === 'ellipse'
-              ? 'bg-surface-selected border-edge-active'
-              : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
-            @click="setShapeType('ellipse')"
-          >
-            <Circle class="w-3.5 h-3.5 text-foreground-secondary" />
+            <Blend class="w-3.5 h-3.5 text-foreground-secondary" />
           </button>
         </Tooltip>
       </div>
 
-      <div v-if="toolStore.shapeType !== 'line'" class="space-y-1.5">
-        <Tooltip :label="t('tools.shapeFilledDesc')" shortcut="F">
-          <label class="flex items-center gap-1.5 text-xs text-foreground-secondary cursor-pointer">
-            <input
-              type="checkbox"
-              class="accent-edge-active"
-              :checked="toolStore.shapeFilled"
-              @change="toolStore.toggleShapeFilled()"
-            />
-            {{ t('tools.shapeFilled') }}
-          </label>
-        </Tooltip>
-        <Tooltip :label="t('tools.shapeConstrainDesc')" shortcut="Q">
-          <label class="flex items-center gap-1.5 text-xs text-foreground-secondary cursor-pointer">
-            <input
-              type="checkbox"
-              class="accent-edge-active"
-              :checked="toolStore.shapeConstrain"
-              @change="toolStore.toggleShapeConstrain()"
-            />
-            {{ toolStore.shapeType === 'rect' ? t('tools.shapeSquare') : t('tools.shapeCircle') }}
-          </label>
-        </Tooltip>
+      <!-- Symmetry -->
+      <div class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
+        <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.symmetry') }}</h3>
+        <div class="grid grid-cols-2 gap-1">
+          <Tooltip :label="t('tools.mirrorHorizontalDesc')" shortcut="H">
+            <button
+              class="w-full h-7 flex items-center justify-center border rounded transition-colors"
+              :class="toolStore.symmetryHorizontal
+                ? 'bg-surface-selected border-edge-active'
+                : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
+              @click="toolStore.toggleSymmetryHorizontal()"
+            >
+              <FlipVertical class="w-3.5 h-3.5 text-foreground-secondary" />
+            </button>
+          </Tooltip>
+          <Tooltip :label="t('tools.mirrorVerticalDesc')" shortcut="V">
+            <button
+              class="w-full h-7 flex items-center justify-center border rounded transition-colors"
+              :class="toolStore.symmetryVertical
+                ? 'bg-surface-selected border-edge-active'
+                : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
+              @click="toolStore.toggleSymmetryVertical()"
+            >
+              <FlipHorizontal class="w-3.5 h-3.5 text-foreground-secondary" />
+            </button>
+          </Tooltip>
+        </div>
       </div>
-    </div>
+    </template>
 
-    <!-- Symmetry options (visible when pencil or eraser tool is active) -->
-    <div v-if="isPencilOrEraserActive" class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
-      <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.symmetry') }}</h3>
-      <div class="grid grid-cols-2 gap-1">
-        <Tooltip :label="t('tools.mirrorHorizontalDesc')" shortcut="H">
+    <!-- Shape tool options -->
+    <template v-if="isShapeActive">
+      <!-- Shape Type -->
+      <div class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
+        <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.shapeType') }}</h3>
+        <div class="grid grid-cols-3 gap-1">
+          <Tooltip :label="t('tools.shapeLine')" shortcut="1">
+            <button
+              class="w-full h-7 flex items-center justify-center border rounded transition-colors"
+              :class="toolStore.shapeType === 'line'
+                ? 'bg-surface-selected border-edge-active'
+                : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
+              @click="setShapeType('line')"
+            >
+              <Minus class="w-3.5 h-3.5 text-foreground-secondary" />
+            </button>
+          </Tooltip>
+          <Tooltip :label="t('tools.shapeRect')" shortcut="2">
+            <button
+              class="w-full h-7 flex items-center justify-center border rounded transition-colors"
+              :class="toolStore.shapeType === 'rect'
+                ? 'bg-surface-selected border-edge-active'
+                : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
+              @click="setShapeType('rect')"
+            >
+              <Square class="w-3.5 h-3.5 text-foreground-secondary" />
+            </button>
+          </Tooltip>
+          <Tooltip :label="t('tools.shapeEllipse')" shortcut="3">
+            <button
+              class="w-full h-7 flex items-center justify-center border rounded transition-colors"
+              :class="toolStore.shapeType === 'ellipse'
+                ? 'bg-surface-selected border-edge-active'
+                : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
+              @click="setShapeType('ellipse')"
+            >
+              <Circle class="w-3.5 h-3.5 text-foreground-secondary" />
+            </button>
+          </Tooltip>
+        </div>
+
+        <div v-if="toolStore.shapeType !== 'line'" class="space-y-1.5">
+          <Tooltip :label="t('tools.shapeFilledDesc')" shortcut="F">
+            <label class="flex items-center gap-1.5 text-xs text-foreground-secondary cursor-pointer">
+              <input
+                type="checkbox"
+                class="accent-edge-active"
+                :checked="toolStore.shapeFilled"
+                @change="toolStore.toggleShapeFilled()"
+              />
+              {{ t('tools.shapeFilled') }}
+            </label>
+          </Tooltip>
+          <Tooltip :label="t('tools.shapeConstrainDesc')" shortcut="Q">
+            <label class="flex items-center gap-1.5 text-xs text-foreground-secondary cursor-pointer">
+              <input
+                type="checkbox"
+                class="accent-edge-active"
+                :checked="toolStore.shapeConstrain"
+                @change="toolStore.toggleShapeConstrain()"
+              />
+              {{ toolStore.shapeType === 'rect' ? t('tools.shapeSquare') : t('tools.shapeCircle') }}
+            </label>
+          </Tooltip>
+        </div>
+      </div>
+
+      <!-- Blend Mode -->
+      <div class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
+        <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.blendMode') }}</h3>
+        <Tooltip :label="toolStore.blendMode === 'blend' ? t('tools.blendModeOverwriteDesc') : t('tools.blendModeBlendDesc')" shortcut="B">
           <button
             class="w-full h-7 flex items-center justify-center border rounded transition-colors"
-            :class="toolStore.symmetryHorizontal
+            :class="toolStore.blendMode === 'blend'
               ? 'bg-surface-selected border-edge-active'
               : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
-            @click="toolStore.toggleSymmetryHorizontal()"
+            @click="toolStore.toggleBlendMode()"
           >
-            <FlipVertical class="w-3.5 h-3.5 text-foreground-secondary" />
-          </button>
-        </Tooltip>
-        <Tooltip :label="t('tools.mirrorVerticalDesc')" shortcut="V">
-          <button
-            class="w-full h-7 flex items-center justify-center border rounded transition-colors"
-            :class="toolStore.symmetryVertical
-              ? 'bg-surface-selected border-edge-active'
-              : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
-            @click="toolStore.toggleSymmetryVertical()"
-          >
-            <FlipHorizontal class="w-3.5 h-3.5 text-foreground-secondary" />
+            <Blend class="w-3.5 h-3.5 text-foreground-secondary" />
           </button>
         </Tooltip>
       </div>
-    </div>
-
-    <!-- Blend mode toggle (visible when pencil or shape tool is active) -->
-    <div v-if="isBlendModeVisible" class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
-      <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.blendMode') }}</h3>
-      <Tooltip :label="toolStore.blendMode === 'blend' ? t('tools.blendModeOverwriteDesc') : t('tools.blendModeBlendDesc')" shortcut="B">
-        <button
-          class="w-full h-7 flex items-center justify-center border rounded transition-colors"
-          :class="toolStore.blendMode === 'blend'
-            ? 'bg-surface-selected border-edge-active'
-            : 'bg-surface-overlay border-edge-subtle hover:bg-hover'"
-          @click="toolStore.toggleBlendMode()"
-        >
-          <Blend class="w-3.5 h-3.5 text-foreground-secondary" />
-        </button>
-      </Tooltip>
-    </div>
+    </template>
   </div>
 </template>

@@ -4,6 +4,8 @@ export type ShapeType = 'line' | 'rect' | 'ellipse'
 
 export type BlendMode = 'overwrite' | 'blend'
 
+export type BrushShape = 'square' | 'circle'
+
 export interface RGBA {
   r: number
   g: number

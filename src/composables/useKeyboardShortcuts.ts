@@ -80,6 +80,16 @@ export function useKeyboardShortcuts() {
           toolStore.toggleBlendMode()
         }
         break
+      case '[':
+        if (toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser') {
+          toolStore.decreaseBrushSize()
+        }
+        break
+      case ']':
+        if (toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser') {
+          toolStore.increaseBrushSize()
+        }
+        break
       case '+':
       case '=':
         settings.zoom = Math.min(64, Math.round(settings.zoom * 1.5))

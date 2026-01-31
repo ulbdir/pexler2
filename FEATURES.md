@@ -57,31 +57,39 @@
 
 Features prioritized by usefulness, development effort, and integration fit (scored 1–5 each, max 15).
 
-### High Priority (Score 13–14)
+### Critical Priority (Score 14–15)
 
 | Feature | U | D | I | Total | Description |
 |---------|---|---|---|-------|-------------|
-| Brush Size | 4 | 4 | 5 | 13 | Variable 1–16px brush with square/circle shapes. |
-| Pixel-Perfect Mode | 4 | 4 | 5 | 13 | Removes L-shaped double pixels when drawing freehand. Keeps lines clean. |
-| Scaled Export | 4 | 4 | 5 | 13 | Export at 2x/4x/8x scale with nearest-neighbor interpolation. |
+| Brush Size | 5 | 5 | 5 | 15 | Variable 1–16px brush with square/circle shapes. Essential for any serious workflow. |
+| Rectangular Selection + Move | 5 | 4 | 5 | 14 | Marching ants selection, drag to move, copy/paste, delete. Foundation for many other features. |
+| Pixel-Perfect Mode | 4 | 5 | 5 | 14 | Removes L-shaped double pixels when drawing freehand. Keeps lines automatically clean. |
 
-### Medium Priority (Score 10–12)
+### High Priority (Score 12–13)
 
 | Feature | U | D | I | Total | Description |
 |---------|---|---|---|-------|-------------|
-| Rectangular Selection + Move | 5 | 3 | 4 | 12 | Marching ants selection, move/copy/paste, delete selection. |
-| Dithering Patterns | 4 | 4 | 4 | 12 | Checkerboard / Bayer matrix brush modes for pixel art gradients. |
-| Layers | 5 | 2 | 3 | 10 | Multiple transparent layers with visibility, opacity, reorder. Strategic investment for future features. |
+| Scaled Export | 4 | 5 | 4 | 13 | Export at 2x/4x/8x/16x scale with nearest-neighbor interpolation. Critical for sharing pixel art. |
+| Color Replace Tool | 4 | 5 | 4 | 13 | Replace one color with another across entire canvas. Essential for palette swapping. |
+| Magic Wand Selection | 4 | 4 | 4 | 12 | Select contiguous same-color regions with tolerance. Fast selection of shapes/objects. |
+| Shading Mode | 4 | 4 | 4 | 12 | Cycle through palette colors when drawing over existing pixels. Creates smooth gradients. |
+
+### Medium Priority (Score 10–11)
+
+| Feature | U | D | I | Total | Description |
+|---------|---|---|---|-------|-------------|
+| Dithering Patterns | 4 | 4 | 3 | 11 | Checkerboard / Bayer matrix brush modes for creating gradients in limited palettes. |
+| Lospec Palette Integration | 3 | 4 | 4 | 11 | Browse and import from 4100+ community palettes directly from lospec.com API. |
+| Tiled/Wrap Mode | 3 | 4 | 4 | 11 | Render canvas tiled 3x3 for seamless texture creation. See pattern repeat instantly. |
+| Layers | 5 | 2 | 3 | 10 | Multiple transparent layers with visibility, opacity, reorder. Strategic for future animation. |
 
 ### Future Considerations
 
 | Feature | U | D | I | Total | Notes |
 |---------|---|---|---|-------|-------|
-| Lospec Palette Integration | 3 | 4 | 5 | 12 | Fetch community palettes from lospec.com API. |
-| Tiled/Wrap Mode | 3 | 3 | 4 | 10 | Render canvas tiled for seamless texture creation. |
-| Custom Brushes | 3 | 3 | 3 | 9 | Select region and use as stamp. Depends on selection tool. |
-| Animation / Frames | 5 | 1 | 2 | 8 | Major architectural change. Best done after layers. |
-| Onion Skinning | 4 | 2 | 3 | 9 | Depends on animation/frames existing first. |
+| Custom Brushes | 3 | 3 | 3 | 9 | Select region and use as stamp. Depends on selection tool implementation. |
+| Onion Skinning | 4 | 2 | 3 | 9 | Preview previous/next frames. Depends on animation/frames existing first. |
+| Animation / Frames | 5 | 1 | 2 | 8 | Multi-frame timeline with playback. Major architectural change. Best done after layers. |
 
 ---
 
