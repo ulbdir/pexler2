@@ -5,6 +5,7 @@ import { useToolStore } from '@/stores/toolStore'
 import { usePaletteStore } from '@/stores/paletteStore'
 import { bresenhamLine } from '@/utils/bresenham'
 import { rectOutline, rectFilled, ellipseOutline, ellipseFilled, constrainToSquare } from '@/utils/shapes'
+import { getBrushOffsets } from '@/utils/brush'
 
 export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
   const canvasStore = useCanvasStore()
@@ -144,17 +145,22 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
 
     // Draw hover pixel highlight (only for pencil and eraser tools)
     if (toolStore.hoverPosition && (toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser')) {
-      const points = toolStore.getSymmetryPoints(
+      const symmetryPoints = toolStore.getSymmetryPoints(
         toolStore.hoverPosition.x,
         toolStore.hoverPosition.y,
         imgW,
         imgH
       )
+      const brushOffsets = getBrushOffsets(toolStore.brushShape, toolStore.brushSize)
       const color = paletteStore.selectedColor
       ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.5)`
-      for (const p of points) {
-        if (p.x < 0 || p.x >= imgW || p.y < 0 || p.y >= imgH) continue
-        ctx.fillRect(panX + p.x * zoom, panY + p.y * zoom, zoom, zoom)
+      for (const sp of symmetryPoints) {
+        for (const offset of brushOffsets) {
+          const px = sp.x + offset.x
+          const py = sp.y + offset.y
+          if (px < 0 || px >= imgW || py < 0 || py >= imgH) continue
+          ctx.fillRect(panX + px * zoom, panY + py * zoom, zoom, zoom)
+        }
       }
     }
   }
@@ -175,6 +181,8 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
       toolStore.hoverPosition,
       toolStore.symmetryHorizontal,
       toolStore.symmetryVertical,
+      toolStore.brushSize,
+      toolStore.brushShape,
       paletteStore.selectedColor,
     ],
     scheduleRender,
