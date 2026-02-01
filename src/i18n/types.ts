@@ -54,6 +54,15 @@ export interface Messages {
   'canvas.zoomIn': string
   'canvas.zoomOut': string
   'canvas.toggleGrid': string
+  'canvas.togglePreview': string
+  'preview.title': string
+  'preview.options': string
+  'preview.close': string
+  'preview.zoom1': string
+  'preview.zoom2': string
+  'preview.zoom4': string
+  'preview.repeatHorizontal': string
+  'preview.repeatVertical': string
   'dialog.newCanvas.title': string
   'dialog.newCanvas.width': string
   'dialog.newCanvas.height': string

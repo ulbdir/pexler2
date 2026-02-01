@@ -17,6 +17,7 @@
 - Pan via right-click drag or Ctrl+drag
 - Pixel grid overlay (auto-shown at zoom >= 4x)
 - Checkerboard transparency background (configurable: 4/8/16/32px)
+- **Preview Window** (`W`) — Floating, resizable preview at fixed zoom (1:1, 1:2, 1:4) with optional horizontal/vertical tiling for seamless texture preview
 
 ### Color & Palette
 - 36-color default palette
@@ -50,6 +51,7 @@
 - `Q` — Toggle square/circle constraint (when rectangle/ellipse shape active)
 - `1`/`2`/`3` — Select Line/Rectangle/Ellipse (when shape tool active)
 - `B` — Toggle blend mode overwrite/blend (when pencil/shape active)
+- `W` — Toggle preview window
 
 ---
 
@@ -80,7 +82,7 @@ Features prioritized by usefulness, development effort, and integration fit (sco
 |---------|---|---|---|-------|-------------|
 | Dithering Patterns | 4 | 4 | 3 | 11 | Checkerboard / Bayer matrix brush modes for creating gradients in limited palettes. |
 | Lospec Palette Integration | 3 | 4 | 4 | 11 | Browse and import from 4100+ community palettes directly from lospec.com API. |
-| Tiled/Wrap Mode | 3 | 4 | 4 | 11 | Render canvas tiled 3x3 for seamless texture creation. See pattern repeat instantly. |
+| Tiled/Wrap Mode | 3 | 4 | 4 | 11 | Draw while seeing canvas tiled 3x3 for seamless texture creation. Extends preview tiling to main canvas. |
 | Layers | 5 | 2 | 3 | 10 | Multiple transparent layers with visibility, opacity, reorder. Strategic for future animation. |
 
 ### Future Considerations
