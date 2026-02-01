@@ -26,6 +26,9 @@ export const useToolStore = defineStore('tool', () => {
   const brushSize = ref<number>(1)
   const brushShape = ref<BrushShape>('square')
 
+  // Replace tool settings
+  const replaceIgnoreAlpha = ref(false)
+
   function setTool(tool: ToolType) {
     activeTool.value = tool
     pendingShape.value = null
@@ -85,6 +88,10 @@ export const useToolStore = defineStore('tool', () => {
     hoverPosition.value = pos
   }
 
+  function toggleReplaceIgnoreAlpha() {
+    replaceIgnoreAlpha.value = !replaceIgnoreAlpha.value
+  }
+
   function getSymmetryPoints(x: number, y: number, canvasWidth: number, canvasHeight: number): Point[] {
     const points: Point[] = [{ x, y }]
 
@@ -126,6 +133,7 @@ export const useToolStore = defineStore('tool', () => {
     blendMode.value = 'overwrite'
     brushSize.value = 1
     brushShape.value = 'square'
+    replaceIgnoreAlpha.value = false
   }
 
   return {
@@ -140,6 +148,7 @@ export const useToolStore = defineStore('tool', () => {
     hoverPosition,
     brushSize,
     brushShape,
+    replaceIgnoreAlpha,
     setTool,
     setShapeType,
     toggleShapeFilled,
@@ -155,6 +164,7 @@ export const useToolStore = defineStore('tool', () => {
     setBrushShape,
     increaseBrushSize,
     decreaseBrushSize,
+    toggleReplaceIgnoreAlpha,
     $reset,
   }
 })

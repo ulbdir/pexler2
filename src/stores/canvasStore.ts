@@ -61,6 +61,41 @@ export const useCanvasStore = defineStore('canvas', () => {
     version.value++
   }
 
+  function replaceColor(source: RGBA, target: RGBA, ignoreAlpha: boolean = false): number {
+    // If source and target are the same, do nothing
+    if (source.r === target.r && source.g === target.g && source.b === target.b && source.a === target.a) {
+      return 0
+    }
+
+    let replacedCount = 0
+    const totalPixels = width.value * height.value
+
+    for (let i = 0; i < totalPixels * 4; i += 4) {
+      const r = pixels.value[i]!
+      const g = pixels.value[i + 1]!
+      const b = pixels.value[i + 2]!
+      const a = pixels.value[i + 3]!
+
+      // Check if this pixel matches the source color
+      const rgbMatches = r === source.r && g === source.g && b === source.b
+      const alphaMatches = ignoreAlpha || a === source.a
+
+      if (rgbMatches && alphaMatches) {
+        pixels.value[i] = target.r
+        pixels.value[i + 1] = target.g
+        pixels.value[i + 2] = target.b
+        pixels.value[i + 3] = target.a
+        replacedCount++
+      }
+    }
+
+    if (replacedCount > 0) {
+      version.value++
+    }
+
+    return replacedCount
+  }
+
   function getSnapshot(): Uint8ClampedArray {
     return new Uint8ClampedArray(pixels.value)
   }
@@ -89,5 +124,6 @@ export const useCanvasStore = defineStore('canvas', () => {
     getSnapshot,
     restoreSnapshot,
     setImageData,
+    replaceColor,
   }
 })

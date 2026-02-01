@@ -1,4 +1,4 @@
-export type ToolType = 'pencil' | 'eraser' | 'fill' | 'eyedropper' | 'shape'
+export type ToolType = 'pencil' | 'eraser' | 'fill' | 'eyedropper' | 'replace' | 'shape'
 
 export type ShapeType = 'line' | 'rect' | 'ellipse'
 

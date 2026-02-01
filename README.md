@@ -6,9 +6,10 @@ A browser-based pixel art editor. Draw, fill, pick colors, and export your creat
 
 ## Features
 
-- **Drawing Tools** — Pencil, Eraser, Flood Fill, Eyedropper, Shape tool, Blend Mode (overwrite/blend)
-- **Canvas** — Zoom (1x–64x), pan, resizable (1–512px), pixel grid overlay
-- **Colors** — 36-color default palette, full RGBA color picker, save/load palettes as JSON
+- **Drawing Tools** — Pencil, Eraser, Flood Fill, Eyedropper, Color Replace, Shape tool, Blend Mode (overwrite/blend), Mirror/Symmetry drawing
+- **Canvas** — Zoom (1x–64x), pan, resizable (1–512px), pixel grid overlay, checkerboard transparency background
+- **Preview Window** — Floating resizable preview at 1:1/1:2/1:4 zoom with optional horizontal/vertical tiling
+- **Colors** — 36-color default palette, full RGBA color picker, save/load palettes as JSON, extract palette from image
 - **History** — Undo/Redo (up to 50 states)
 - **Import/Export** — Export as PNG, load any image file
 - **i18n** — English and German (auto-detected)
@@ -21,6 +22,7 @@ A browser-based pixel art editor. Draw, fill, pick colors, and export your creat
 | Eraser | `E` |
 | Fill | `G` |
 | Eyedropper | `I` |
+| Color Replace | — |
 | Shape tool | `S` |
 | Line tool | `1` (when shape tool active) |
 | Rectangle tool | `2` (when shape tool active) |
@@ -28,6 +30,7 @@ A browser-based pixel art editor. Draw, fill, pick colors, and export your creat
 | Toggle filled | `F` (when shape tool active) |
 | Toggle square/circle | `Q` (when rectangle/ellipse shape active) |
 | Toggle blend mode | `B` (when pencil/shape tool active) |
+| Toggle preview window | `W` |
 | Zoom In | `+` / scroll up |
 | Zoom Out | `-` / scroll down |
 | Pan | Right-click drag / Ctrl+drag |

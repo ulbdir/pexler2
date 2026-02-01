@@ -155,6 +155,31 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
         }
       }
     }
+
+    // Draw replace tool preview - highlight all matching pixels with blue tint
+    if (toolStore.activeTool === 'replace' && toolStore.hoverPosition) {
+      const hoverColor = canvasStore.getPixel(toolStore.hoverPosition.x, toolStore.hoverPosition.y)
+      
+      // Only show preview if we have a valid pixel
+      if (hoverColor.a > 0 || toolStore.replaceIgnoreAlpha) {
+        ctx.fillStyle = 'rgba(100, 150, 255, 0.4)' // Semi-transparent blue
+        
+        // Iterate through all pixels and highlight matches
+        for (let y = 0; y < imgH; y++) {
+          for (let x = 0; x < imgW; x++) {
+            const pixel = canvasStore.getPixel(x, y)
+            
+            // Check if this pixel matches the hover color
+            const rgbMatches = pixel.r === hoverColor.r && pixel.g === hoverColor.g && pixel.b === hoverColor.b
+            const alphaMatches = toolStore.replaceIgnoreAlpha || pixel.a === hoverColor.a
+            
+            if (rgbMatches && alphaMatches) {
+              ctx.fillRect(panX + x * zoom, panY + y * zoom, zoom, zoom)
+            }
+          }
+        }
+      }
+    }
   }
 
   const stopWatch: WatchStopHandle = watch(
@@ -166,6 +191,7 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
       settings.gridVisible,
       settings.backgroundEnabled,
       settings.checkerSize,
+      toolStore.activeTool,
       toolStore.pendingShape,
       toolStore.shapeType,
       toolStore.shapeFilled,
@@ -175,6 +201,7 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
       toolStore.symmetryVertical,
       toolStore.brushSize,
       toolStore.brushShape,
+      toolStore.replaceIgnoreAlpha,
       paletteStore.selectedColor,
     ],
     scheduleRender,
