@@ -132,6 +132,16 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
         }
         break
       }
+      case 'replace': {
+        const sourceColor = canvasStore.getPixel(pos.x, pos.y)
+        const targetColor = paletteStore.selectedColor
+
+        // Only replace if we have a valid source and it's different from target
+        if (sourceColor.a > 0 || toolStore.replaceIgnoreAlpha) {
+          canvasStore.replaceColor(sourceColor, targetColor, toolStore.replaceIgnoreAlpha)
+        }
+        break
+      }
     }
   }
 
@@ -156,6 +166,16 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
       return
     }
 
+    // Replace tool is a one-click action
+    if (tool === 'replace') {
+      const pos = screenToImage(canvasRef.value, e.clientX, e.clientY)
+      if (!pos) return
+
+      historyStore.pushState()
+      applyTool(e.clientX, e.clientY)
+      return
+    }
+
     isDrawing = true
     lastPos = null
     canvasRef.value?.setPointerCapture(e.pointerId)
@@ -171,9 +191,9 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     const tool = toolStore.activeTool
     const pos = screenToImage(canvasRef.value, e.clientX, e.clientY)
 
-    // Track hover position for pencil/eraser (used for brush preview)
+    // Track hover position for pencil/eraser/replace (used for brush/preview)
     // Clear hover when pointer is outside image bounds or tool changes
-    if ((tool === 'pencil' || tool === 'eraser') && pos) {
+    if ((tool === 'pencil' || tool === 'eraser' || tool === 'replace') && pos) {
       toolStore.setHoverPosition(pos)
     } else {
       toolStore.setHoverPosition(null)

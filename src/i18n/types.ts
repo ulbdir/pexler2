@@ -28,6 +28,9 @@ export interface Messages {
   'tools.eraser': string
   'tools.fill': string
   'tools.eyedropper': string
+  'tools.replace': string
+  'tools.replaceDesc': string
+  'tools.replaceIgnoreAlpha': string
   'tools.shape': string
   'tools.shapeType': string
   'tools.shapeLine': string

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Pencil, Eraser, PaintBucket, Pipette, Shapes, Minus, Square, Circle, FlipHorizontal, FlipVertical, Blend, Plus } from 'lucide-vue-next'
+import { Pencil, Eraser, PaintBucket, Pipette, Shapes, Minus, Square, Circle, FlipHorizontal, FlipVertical, Blend, Plus, RefreshCcw } from 'lucide-vue-next'
 import { useI18n } from '@/i18n'
 import { useToolStore } from '@/stores/toolStore'
 import ToolButton from './ToolButton.vue'
@@ -12,6 +12,7 @@ const toolStore = useToolStore()
 
 const isShapeActive = computed(() => toolStore.activeTool === 'shape')
 const isPencilOrEraserActive = computed(() => toolStore.activeTool === 'pencil' || toolStore.activeTool === 'eraser')
+const isReplaceActive = computed(() => toolStore.activeTool === 'replace')
 
 function setShapeType(type: ShapeType) {
   toolStore.setShapeType(type)
@@ -33,6 +34,9 @@ function setShapeType(type: ShapeType) {
       </ToolButton>
       <ToolButton tool="eyedropper" :label="t('tools.eyedropper')" shortcut="I">
         <Pipette class="w-4 h-4 text-foreground-secondary" />
+      </ToolButton>
+      <ToolButton tool="replace" :label="t('tools.replace')">
+        <RefreshCcw class="w-4 h-4 text-foreground-secondary" />
       </ToolButton>
       <ToolButton tool="shape" :label="t('tools.shape')" shortcut="S">
         <Shapes class="w-4 h-4 text-foreground-secondary" />
@@ -237,6 +241,29 @@ function setShapeType(type: ShapeType) {
             <Blend class="w-3.5 h-3.5 text-foreground-secondary" />
           </button>
         </Tooltip>
+      </div>
+    </template>
+
+    <!-- Replace tool options -->
+    <template v-if="isReplaceActive">
+      <div class="mt-3 pt-3 border-t border-edge-subtle space-y-2">
+        <h3 class="text-xs font-semibold text-foreground-secondary">{{ t('tools.replace') }}</h3>
+        
+        <Tooltip :label="t('tools.replaceIgnoreAlpha')">
+          <label class="flex items-center gap-1.5 text-xs text-foreground-secondary cursor-pointer">
+            <input
+              type="checkbox"
+              class="accent-edge-active"
+              :checked="toolStore.replaceIgnoreAlpha"
+              @change="toolStore.toggleReplaceIgnoreAlpha()"
+            />
+            {{ t('tools.replaceIgnoreAlpha') }}
+          </label>
+        </Tooltip>
+        
+        <p class="text-xs text-foreground-muted leading-relaxed">
+          {{ t('tools.replaceDesc') }}
+        </p>
       </div>
     </template>
   </div>
