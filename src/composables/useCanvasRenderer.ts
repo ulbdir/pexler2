@@ -6,6 +6,7 @@ import { usePaletteStore } from '@/stores/paletteStore'
 import { bresenhamLine } from '@/utils/bresenham'
 import { rectOutline, rectFilled, ellipseOutline, ellipseFilled, constrainToSquare } from '@/utils/shapes'
 import { getBrushOffsets } from '@/utils/brush'
+import { drawCheckerboard } from '@/utils/checkerboard'
 
 export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
   const canvasStore = useCanvasStore()
@@ -55,22 +56,13 @@ export function useCanvasRenderer(canvasRef: Ref<HTMLCanvasElement | null>) {
 
     // Draw checkerboard background (sized in image pixels, scales with zoom)
     if (settings.backgroundEnabled) {
-      const checker = settings.checkerSize
-      const screenChecker = checker * zoom
-      const cols = Math.ceil(imgW / checker)
-      const rows = Math.ceil(imgH / checker)
-
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const isLight = ((col + row) % 2) === 0
-          ctx.fillStyle = isLight ? '#ffffff' : '#e0e0e0'
-          const sx = panX + col * screenChecker
-          const sy = panY + row * screenChecker
-          const sw = Math.min(screenChecker, panX + imgW * zoom - sx)
-          const sh = Math.min(screenChecker, panY + imgH * zoom - sy)
-          ctx.fillRect(sx, sy, sw, sh)
-        }
-      }
+      drawCheckerboard(ctx, {
+        x: panX,
+        y: panY,
+        width: imgW * zoom,
+        height: imgH * zoom,
+        checkerSize: settings.checkerSize * zoom,
+      })
     }
 
     // Render image pixels via offscreen canvas

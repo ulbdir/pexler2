@@ -97,6 +97,9 @@ export function useKeyboardShortcuts() {
       case '-':
         settings.zoom = Math.max(1, Math.round(settings.zoom / 1.5))
         break
+      case 'w':
+        settings.togglePreview()
+        break
     }
   }
 
