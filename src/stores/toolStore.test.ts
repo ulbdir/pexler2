@@ -27,6 +27,16 @@ describe('toolStore', () => {
       const store = useToolStore()
       expect(store.blendMode).toBe('overwrite')
     })
+
+    it('brushSize defaults to 1', () => {
+      const store = useToolStore()
+      expect(store.brushSize).toBe(1)
+    })
+
+    it('brushShape defaults to square', () => {
+      const store = useToolStore()
+      expect(store.brushShape).toBe('square')
+    })
   })
 
   describe('toggleSymmetryHorizontal', () => {
@@ -407,6 +417,85 @@ describe('toolStore', () => {
     })
   })
 
+  describe('setBrushSize', () => {
+    it('sets brush size to valid value', () => {
+      const store = useToolStore()
+      store.setBrushSize(5)
+      expect(store.brushSize).toBe(5)
+    })
+
+    it('clamps brush size to minimum of 1', () => {
+      const store = useToolStore()
+      store.setBrushSize(0)
+      expect(store.brushSize).toBe(1)
+      store.setBrushSize(-5)
+      expect(store.brushSize).toBe(1)
+    })
+
+    it('clamps brush size to maximum of 16', () => {
+      const store = useToolStore()
+      store.setBrushSize(20)
+      expect(store.brushSize).toBe(16)
+      store.setBrushSize(100)
+      expect(store.brushSize).toBe(16)
+    })
+
+    it('rounds decimal values', () => {
+      const store = useToolStore()
+      store.setBrushSize(3.7)
+      expect(store.brushSize).toBe(4)
+      store.setBrushSize(3.2)
+      expect(store.brushSize).toBe(3)
+    })
+  })
+
+  describe('setBrushShape', () => {
+    it('sets brush shape to circle', () => {
+      const store = useToolStore()
+      store.setBrushShape('circle')
+      expect(store.brushShape).toBe('circle')
+    })
+
+    it('sets brush shape to square', () => {
+      const store = useToolStore()
+      store.setBrushShape('circle')
+      store.setBrushShape('square')
+      expect(store.brushShape).toBe('square')
+    })
+  })
+
+  describe('increaseBrushSize', () => {
+    it('increases brush size by 1', () => {
+      const store = useToolStore()
+      store.setBrushSize(5)
+      store.increaseBrushSize()
+      expect(store.brushSize).toBe(6)
+    })
+
+    it('does not exceed maximum of 16', () => {
+      const store = useToolStore()
+      store.setBrushSize(16)
+      store.increaseBrushSize()
+      expect(store.brushSize).toBe(16)
+    })
+  })
+
+  describe('decreaseBrushSize', () => {
+    it('decreases brush size by 1', () => {
+      const store = useToolStore()
+      store.setBrushSize(5)
+      store.decreaseBrushSize()
+      expect(store.brushSize).toBe(4)
+    })
+
+    it('does not go below minimum of 1', () => {
+      const store = useToolStore()
+      store.setBrushSize(1)
+      store.decreaseBrushSize()
+      expect(store.brushSize).toBe(1)
+    })
+  })
+
   describe('$reset', () => {
     it('resets symmetry flags to false', () => {
       const store = useToolStore()
@@ -437,6 +526,15 @@ describe('toolStore', () => {
       expect(store.shapeFilled).toBe(false)
       expect(store.shapeConstrain).toBe(false)
       expect(store.blendMode).toBe('overwrite')
+    })
+
+    it('resets brush settings to defaults', () => {
+      const store = useToolStore()
+      store.setBrushSize(8)
+      store.setBrushShape('circle')
+      store.$reset()
+      expect(store.brushSize).toBe(1)
+      expect(store.brushShape).toBe('square')
     })
   })
 })

@@ -44,6 +44,11 @@ export interface Messages {
   'tools.blendMode': string
   'tools.blendModeOverwriteDesc': string
   'tools.blendModeBlendDesc': string
+  'tools.brushSize': string
+  'tools.brushSizeDecrease': string
+  'tools.brushSizeIncrease': string
+  'tools.brushSquare': string
+  'tools.brushCircle': string
   'palette.title': string
   'canvas.resetView': string
   'canvas.zoomIn': string

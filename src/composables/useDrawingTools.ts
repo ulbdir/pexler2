@@ -7,6 +7,7 @@ import { screenToImage } from '@/composables/useCanvasInteraction'
 import { floodFill } from '@/utils/floodFill'
 import { bresenhamLine } from '@/utils/bresenham'
 import { rectOutline, rectFilled, ellipseOutline, ellipseFilled, constrainToSquare } from '@/utils/shapes'
+import { getBrushOffsets } from '@/utils/brush'
 import type { Point } from '@/types'
 
 export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
@@ -20,19 +21,32 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
 
   function applyAtPixel(x: number, y: number) {
     const tool = toolStore.activeTool
-    const points = toolStore.getSymmetryPoints(x, y, canvasStore.width, canvasStore.height)
+    const symmetryPoints = toolStore.getSymmetryPoints(x, y, canvasStore.width, canvasStore.height)
+    const brushOffsets = getBrushOffsets(toolStore.brushShape, toolStore.brushSize)
 
     switch (tool) {
       case 'pencil': {
         const color = paletteStore.selectedColor
-        for (const p of points) {
-          canvasStore.setPixel(p.x, p.y, color, toolStore.blendMode)
+        for (const sp of symmetryPoints) {
+          for (const offset of brushOffsets) {
+            const px = sp.x + offset.x
+            const py = sp.y + offset.y
+            if (px >= 0 && px < canvasStore.width && py >= 0 && py < canvasStore.height) {
+              canvasStore.setPixel(px, py, color, toolStore.blendMode)
+            }
+          }
         }
         break
       }
       case 'eraser': {
-        for (const p of points) {
-          canvasStore.setPixel(p.x, p.y, { r: 0, g: 0, b: 0, a: 0 }, 'overwrite')
+        for (const sp of symmetryPoints) {
+          for (const offset of brushOffsets) {
+            const px = sp.x + offset.x
+            const py = sp.y + offset.y
+            if (px >= 0 && px < canvasStore.width && py >= 0 && py < canvasStore.height) {
+              canvasStore.setPixel(px, py, { r: 0, g: 0, b: 0, a: 0 }, 'overwrite')
+            }
+          }
         }
         break
       }
@@ -157,11 +171,10 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     const tool = toolStore.activeTool
     const pos = screenToImage(canvasRef.value, e.clientX, e.clientY)
 
-    // Track hover position for pencil/eraser (used for symmetry preview)
-    if (tool === 'pencil' || tool === 'eraser') {
-      if (pos) {
-        toolStore.setHoverPosition(pos)
-      }
+    // Track hover position for pencil/eraser (used for brush preview)
+    // Clear hover when pointer is outside image bounds or tool changes
+    if ((tool === 'pencil' || tool === 'eraser') && pos) {
+      toolStore.setHoverPosition(pos)
     } else {
       toolStore.setHoverPosition(null)
     }
@@ -204,7 +217,7 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     }
   }
 
-  function onMouseLeave() {
+  function onPointerLeave() {
     toolStore.setHoverPosition(null)
   }
 
@@ -215,8 +228,8 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     canvas.addEventListener('pointermove', onPointerMove)
     canvas.addEventListener('pointerup', stopDrawing)
     canvas.addEventListener('pointercancel', stopDrawing)
+    canvas.addEventListener('pointerleave', onPointerLeave)
     canvas.addEventListener('contextmenu', onContextMenu)
-    canvas.addEventListener('mouseleave', onMouseLeave)
     document.addEventListener('keydown', onKeyDown)
   }
 
@@ -227,8 +240,8 @@ export function useDrawingTools(canvasRef: Ref<HTMLCanvasElement | null>) {
     canvas.removeEventListener('pointermove', onPointerMove)
     canvas.removeEventListener('pointerup', stopDrawing)
     canvas.removeEventListener('pointercancel', stopDrawing)
+    canvas.removeEventListener('pointerleave', onPointerLeave)
     canvas.removeEventListener('contextmenu', onContextMenu)
-    canvas.removeEventListener('mouseleave', onMouseLeave)
     document.removeEventListener('keydown', onKeyDown)
   }
 
